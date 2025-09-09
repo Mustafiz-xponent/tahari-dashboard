@@ -2,41 +2,32 @@ import jwt from "jsonwebtoken";
 import CONFIG from "@/config/envConfig";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { TokenDecodedData } from "@/types/user";
+import { TokenDecodedData, UserRole } from "@/types/user";
 
+const baseRotues = [
+  "/dashboard",
+  "/products",
+  "/categories",
+  "/farmers",
+  "/subscriptions",
+  "/orders",
+  "/inventories",
+  "/order-trackings",
+  "/messaging",
+  "/customers",
+  "/deals",
+  "/promotions",
+  "/analytics",
+];
 export const roleAccess: Record<string, string[]> = {
-  ADMIN: [
+  [UserRole.ADMIN]: baseRotues,
+  [UserRole.SUPER_ADMIN]: [...baseRotues, "/users"],
+  [UserRole.SUPPORT]: [
     "/dashboard",
-    "/products",
-    "/categories",
-    "/farmers",
-    "/subscriptions",
-    "/orders",
-    "inventories",
     "/order-trackings",
     "/messaging",
     "/customers",
-    "/deals",
-    "/promotions",
-    "/analytics",
   ],
-  SUPER_ADMIN: [
-    "/dashboard",
-    "/products",
-    "/categories",
-    "/farmers",
-    "/subscriptions",
-    "/orders",
-    "inventories",
-    "/order-trackings",
-    "/messaging",
-    "/customers",
-    "/deals",
-    "/promotions",
-    "/users",
-    "/analytics",
-  ],
-  SUPPORT: ["/dashboard", "/order-trackings", "/messaging", "/customers"],
 };
 
 export function middleware(req: NextRequest) {
