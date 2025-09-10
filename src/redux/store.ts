@@ -5,7 +5,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import { PersistConfig, persistReducer, persistStore } from "redux-persist";
 
-// Create a no-op storage for non-browser environments
+// Fallback no-op storage for non-browser environments
 const createNoopStorage = () => {
   return {
     getItem() {

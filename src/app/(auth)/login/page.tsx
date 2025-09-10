@@ -1,12 +1,10 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import LoginForm from "@/app/(auth)/login/_components/LoginForm";
 
 const Login = () => {
   return (
-    <div className="">
-      <Card>
-        <CardContent></CardContent>
-      </Card>
+    <div className="bg-[#eff4f8]">
+      <LoginForm />
     </div>
   );
 };

@@ -5,7 +5,6 @@ import type { NextRequest } from "next/server";
 import { TokenDecodedData, UserRole } from "@/types/user";
 
 const baseRotues = [
-  "/dashboard",
   "/products",
   "/categories",
   "/farmers",
@@ -22,12 +21,7 @@ const baseRotues = [
 export const roleAccess: Record<string, string[]> = {
   [UserRole.ADMIN]: baseRotues,
   [UserRole.SUPER_ADMIN]: [...baseRotues, "/users"],
-  [UserRole.SUPPORT]: [
-    "/dashboard",
-    "/order-trackings",
-    "/messaging",
-    "/customers",
-  ],
+  [UserRole.SUPPORT]: ["/order-trackings", "/messaging", "/customers"],
 };
 
 export function middleware(req: NextRequest) {
@@ -63,7 +57,6 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
     "/products/:path*",
     "/categories/:path*",
     "/farmers/:path*",
@@ -78,5 +71,6 @@ export const config = {
     "/promotions/:path*",
     "/users/:path*",
     "/analytics/:path*",
+    "/",
   ],
 };

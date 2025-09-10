@@ -41,9 +41,25 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* font family */
+  /* Custom font family */
   --font-primary: var(--font-poppins);
   --font-secondary: var(--font-inter);
+  /* Custom brand color */
+  --color-brand-100: oklch(0.5718 0.1386 143.5);
+  --color-brand-75: oklch(0.6788 0.1053 144.31);
+  --color-brand-50: oklch(0.7837 0.0704 144.87);
+  --color-brand-25: oklch(0.8924 0.0344 145.28);
+  --color-brand-10: oklch(0.9589 0.0135 145.47);
+  --color-brand-5: oklch(0.978 0.0067 145.52);
+  /* Custom typography color */
+  --color-typography-100: oklch(0.1518 0.0224 144.37);
+  --color-typography-75: oklch(0.4016 0.0126 145.34);
+  --color-typography-50: oklch(0.6154 0.0076 145.48);
+  --color-typography-25: oklch(0.8119 0.0035 145.54);
+  --color-typography-10: oklch(0.9292 0.0025 165.07);
+  --color-typography-5: oklch(0.9631 0.0017 145.56);
+  /* Custom hover color */
+  --color-btn-hover: oklch(0.6262 0.2008 142.7);
 }
 
 :root {
