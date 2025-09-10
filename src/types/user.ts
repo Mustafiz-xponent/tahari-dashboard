@@ -20,10 +20,3 @@ export interface User {
   address: string[];
   status: UserStatus;
 }
-
-export interface TokenDecodedData {
-  userId: number;
-  email: string;
-  role: UserRole;
-  phone: string;
-}

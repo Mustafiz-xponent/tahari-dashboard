@@ -60,6 +60,7 @@
   --color-typography-5: oklch(0.9631 0.0017 145.56);
   /* Custom hover color */
   --color-btn-hover: oklch(0.6262 0.2008 142.7);
+  --color-background-primary: oklch(0.9645 0.0076 241.66);
 }
 
 :root {
@@ -137,5 +138,14 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+/* Loding spinner animation */
+@keyframes clip-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

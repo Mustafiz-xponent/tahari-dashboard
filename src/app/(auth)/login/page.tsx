@@ -3,7 +3,7 @@ import LoginForm from "@/app/(auth)/login/_components/LoginForm";
 
 const Login = () => {
   return (
-    <div className="bg-[#eff4f8]">
+    <div className="bg-background-primary">
       <LoginForm />
     </div>
   );

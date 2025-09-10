@@ -1,9 +1,9 @@
 import "./globals.css";
 
+import { Toaster } from "sonner";
 import type { Metadata } from "next";
 import { Poppins, Inter } from "next/font/google";
 import ReduxProvider from "@/providers/ReduxProvider";
-
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -29,7 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} ${inter.variable} antialiased`}>
+      <body
+        className={`${poppins.variable} ${inter.variable} antialiased`}
+        suppressHydrationWarning
+      >
+        <Toaster richColors position="top-right" />
         <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>

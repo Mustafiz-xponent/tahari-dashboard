@@ -1,10 +1,12 @@
-import jwt from "jsonwebtoken";
-import CONFIG from "@/config/envConfig";
+import { jwtVerify } from "jose";
+import { UserRole } from "@/types/user";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { TokenDecodedData, UserRole } from "@/types/user";
 
-const baseRotues = [
+// Convert secret to Uint8Array for jose
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+
+const baseRoutes = [
   "/products",
   "/categories",
   "/farmers",
@@ -17,40 +19,43 @@ const baseRotues = [
   "/deals",
   "/promotions",
   "/analytics",
+  "/",
 ];
-export const roleAccess: Record<string, string[]> = {
-  [UserRole.ADMIN]: baseRotues,
-  [UserRole.SUPER_ADMIN]: [...baseRotues, "/users"],
+
+export const roleAccess: Record<UserRole, string[]> = {
+  [UserRole.ADMIN]: baseRoutes,
+  [UserRole.SUPER_ADMIN]: [...baseRoutes, "/users"],
   [UserRole.SUPPORT]: ["/order-trackings", "/messaging", "/customers"],
 };
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   // get token from cookie
   const token = req.cookies.get("token")?.value;
-  // if no token, redirect to login
+
   if (!token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
   try {
     // verify token
-    const decoded = jwt.verify(token, CONFIG.JWT_SECRET!) as TokenDecodedData;
+    const { payload } = await jwtVerify(token, JWT_SECRET);
 
+    const decoded = payload;
     const pathname = req.nextUrl.pathname;
 
     // find which base route user is trying to access
     const baseRoute = "/" + pathname.split("/")[1];
 
-    // allowed routes for user role
-    const allowedRoutes = roleAccess[decoded.role] || [];
-    // if user is trying to access a route that is not allowed, redirect to unauthorized
+    // allowed routes for this user role
+    const allowedRoutes = roleAccess[decoded.role as UserRole] || [];
+
     if (!allowedRoutes.includes(baseRoute)) {
       return NextResponse.redirect(new URL("/unauthorized", req.url));
     }
 
     return NextResponse.next();
   } catch (err) {
-    console.log("MIDDLEWARE ERROR:", err);
+    console.error("MIDDLEWARE ERROR:", err);
     return NextResponse.redirect(new URL("/login", req.url));
   }
 }
@@ -63,7 +68,6 @@ export const config = {
     "/subscriptions/:path*",
     "/orders/:path*",
     "/inventories/:path*",
-    "/farmers/:path*",
     "/order-trackings/:path*",
     "/messaging/:path*",
     "/customers/:path*",
