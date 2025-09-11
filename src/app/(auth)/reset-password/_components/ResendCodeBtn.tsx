@@ -11,9 +11,10 @@ const ResendCodeBtn = () => {
   const { resetPasswordPhone, otpResendCooldown } = useAppSelector(
     (state) => state.userReducer
   );
-  const [forgotPasswordHandler] = useForgotPasswordMutation();
+  const [forgotPasswordHandler, { isLoading }] = useForgotPasswordMutation();
   const dispatch = useAppDispatch();
 
+  // Prevent form resubmission within 1 minute
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (otpResendCooldown > 0) {
@@ -26,7 +27,7 @@ const ResendCodeBtn = () => {
     return () => clearInterval(timer);
   }, [dispatch, otpResendCooldown]);
 
-  const handleResend = async () => {
+  const handleResendOtp = async () => {
     try {
       const bodyData = {
         phone: resetPasswordPhone,
@@ -49,12 +50,14 @@ const ResendCodeBtn = () => {
   return (
     <Button
       type="button"
-      onClick={handleResend}
-      disabled={otpResendCooldown > 0}
+      disabled={isLoading || otpResendCooldown > 0}
       className="text-center w-full bg-transparent hover:bg-transparent shadow-none text-gray-500"
     >
       Didn&apos;t receive the code?{" "}
-      <span className="text-brand-100 cursor-pointer">
+      <span
+        onClick={handleResendOtp}
+        className="text-brand-100 hover:text-btn-hover transition-all duration-300 opacity-80 cursor-pointer"
+      >
         {otpResendCooldown > 0
           ? `Resend in ${otpResendCooldown}s`
           : "Resend OTP"}

@@ -40,7 +40,7 @@ const ForgotPasswordForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  // Prevent form resubmission withing
+  // Prevent form resubmission within 1 minute
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (otpResendCooldown > 0) {
