@@ -1,0 +1,12 @@
+import React from "react";
+import ForgotPasswordForm from "@/app/(auth)/forgot-password/_components/ForgotPasswordForm";
+
+const ForgotPassword = () => {
+  return (
+    <div className="bg-blue-50 w-full min-h-screen">
+      <ForgotPasswordForm />
+    </div>
+  );
+};
+
+export default ForgotPassword;

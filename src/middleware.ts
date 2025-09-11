@@ -22,23 +22,28 @@ const baseRoutes = [
   "/",
 ];
 
-export const roleAccess: Record<UserRole, string[]> = {
+const roleAccess: Record<UserRole, string[]> = {
   [UserRole.ADMIN]: baseRoutes,
   [UserRole.SUPER_ADMIN]: [...baseRoutes, "/users"],
   [UserRole.SUPPORT]: ["/order-trackings", "/messaging", "/customers"],
 };
-
+const publicRoutes = [
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/reset-password",
+];
 export async function middleware(req: NextRequest) {
   // get token from cookie
   const token = req.cookies.get("token")?.value;
 
-  if (!token) {
+  if (!token && !publicRoutes.includes(req.nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
   try {
     // verify token
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token!, JWT_SECRET);
 
     const decoded = payload;
     const pathname = req.nextUrl.pathname;

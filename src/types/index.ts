@@ -1,7 +1,9 @@
 export interface IApiError {
   status: number;
   data: {
-    message: string;
+    error: {
+      message: string;
+    };
     [key: string]: unknown;
   };
 }

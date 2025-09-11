@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Lock, Mail, Phone } from "lucide-react";
+import { Eye, EyeOff, Lock, Phone } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -29,6 +29,8 @@ import { useLoginMutation } from "@/redux/services/authApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { IApiError } from "@/types";
 import { toast } from "sonner";
+import Link from "next/link";
+
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const togglePassword = () => setShowPassword(!showPassword);
@@ -48,24 +50,25 @@ export default function LoginForm() {
       const response = await loginHandler(formData).unwrap();
       router.push("/");
       dispatch(setUser(response?.data?.user));
-      const successMessage = "Login successful.";
+      const successMessage = response?.message || "Login successful.";
       toast.success(successMessage);
       form.reset();
     } catch (err: unknown) {
       const error = err as IApiError;
-      const errorMessage = error?.data?.message || "Something went wrong.";
+      const errorMessage =
+        error?.data?.error?.message || "Something went wrong.";
       toast.error(errorMessage);
     }
   }
 
   return (
-    <div className="min-h-screen  bg-gradient-background flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-form border-none animate-fade-in">
-        <CardHeader className="space-y-2 text-center pb-8">
+        <CardHeader className="space-y-1 text-center pb-8">
           <div className="w-16 h-16 bg-brand-75 rounded-full flex items-center justify-center mx-auto mb-4 shadow-subtle">
             <Lock className="w-8 h-8 text-primary-foreground " />
           </div>
-          <CardTitle className="text-2xl sm:text-3xl font-primary font-bold">
+          <CardTitle className="text-2xl font-primary font-bold">
             Welcome back
           </CardTitle>
           <CardDescription className="text-muted-foreground font-secondary">
@@ -94,7 +97,7 @@ export default function LoginForm() {
                           placeholder="Your Phone"
                           type="text"
                           {...field}
-                          className="pl-10 h-12 border-border font-primary  transition-smooth"
+                          className="pl-10 h-12 border-border font-primary focus-visible:border-border focus-visible:ring-0  transition-smooth"
                         />
                       </div>
                     </FormControl>
@@ -121,7 +124,7 @@ export default function LoginForm() {
                           autoComplete="on"
                           type={showPassword ? "text" : "password"}
                           {...field}
-                          className="pl-10 pr-10 h-12 border-border font-primary transition-smooth"
+                          className="pl-10 pr-10 h-12 border-border focus-visible:border-border focus-visible:ring-0 font-primary transition-smooth"
                         />
                         <button
                           onClick={togglePassword}
@@ -141,12 +144,12 @@ export default function LoginForm() {
                 )}
               />
               <div className="flex items-center justify-end text-sm">
-                <a
-                  href="#"
+                <Link
+                  href="forgot-password"
                   className="text-primary hover:text-primary/80 font-medium transition-smooth"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
 
               <Button
@@ -157,7 +160,7 @@ export default function LoginForm() {
                 {isLoading ? (
                   <LoadingSpinner
                     color="#fff"
-                    size={30}
+                    size={25}
                     borderWidth="3px"
                     height="100%"
                   />
