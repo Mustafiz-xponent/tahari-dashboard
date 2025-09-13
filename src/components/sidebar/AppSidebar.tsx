@@ -8,7 +8,6 @@ import { MdOutlineInventory2 } from "react-icons/md";
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenuButton,
   useSidebar,
