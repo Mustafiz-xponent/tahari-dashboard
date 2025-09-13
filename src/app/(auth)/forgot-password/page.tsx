@@ -3,7 +3,7 @@ import ForgotPasswordForm from "@/app/(auth)/forgot-password/_components/ForgotP
 
 const ForgotPassword = () => {
   return (
-    <div className="bg-blue-50 w-full min-h-screen">
+    <div className="bg-brand-5 w-full min-h-screen">
       <ForgotPasswordForm />
     </div>
   );

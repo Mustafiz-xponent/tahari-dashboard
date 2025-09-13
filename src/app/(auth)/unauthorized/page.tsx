@@ -5,7 +5,7 @@ import BackBtn from "@/components/common/BackBtn";
 
 const UnauthorizedCard: React.FC = () => {
   return (
-    <div className="bg-blue-50 sm:p-0 p-5 w-full min-h-screen flex items-center justify-center">
+    <div className="bg-brand-5 sm:p-0 p-5 font-secondary w-full min-h-screen flex items-center justify-center">
       <div className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-md overflow-hidden transform  transition-all duration-300">
         {/* Header with gradient background */}
         <div className="bg-gradient-to-r from-brand-75 to-brand-100 px-8 py-12 text-center">
@@ -21,7 +21,7 @@ const UnauthorizedCard: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-3">
             Access Denied
           </h2>
-          <p className="text-gray-600 mb-6 leading-relaxed">
+          <p className="text-gray-600 mb-6  text-base leading-relaxed">
             You don&apos;t have permission to access this resource. Please log
             in with proper credentials or contact your administrator.
           </p>

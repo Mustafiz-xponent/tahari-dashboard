@@ -17,7 +17,7 @@ const BackBtn = ({ title, className }: BackBtnProps) => {
     <button
       onClick={handleBack}
       className={twMerge(
-        "w-full cursor-pointer bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-2",
+        "w-full cursor-pointer font-secondary bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-2",
         className
       )}
     >

@@ -5,8 +5,8 @@ import BackBtn from "@/components/common/BackBtn";
 
 const NotFound = () => {
   return (
-    <div className="bg-blue-50 sm:p-0 p-5 w-full min-h-screen flex items-center justify-center">
-      <div className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-md overflow-hidden transform  transition-all duration-300">
+    <div className="bg-brand-5  sm:p-0 p-5 w-full min-h-screen flex items-center justify-center">
+      <div className="w-full font-secondary max-w-md mx-auto bg-white rounded-2xl shadow-md overflow-hidden transform  transition-all duration-300">
         {/* Header with gradient background */}
         <div className="bg-gradient-to-r from-brand-75 to-brand-100 px-8 py-12 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
