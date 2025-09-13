@@ -28,9 +28,6 @@ export function SidebarNav({
   const path = usePathname();
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="h-16 font-secondary font-bold flex items-center space-x-1 text-typography-100 flex-wrap text-2xl">
-        <span className="text-brand-100">Tahari</span> <span>Foods</span>
-      </SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
@@ -43,13 +40,16 @@ export function SidebarNav({
               <SidebarMenuItem>
                 <SidebarMenuButton
                   tooltip={item.title}
-                  className={`font-secondary cursor-pointer text-typography-75 hover:text-brand-100 rounded-sm px-4 py-5  ${
+                  className={`font-secondary font-medium cursor-pointer text-typography-75 hover:text-brand-100 rounded-sm px-4 my-0.5 py-5 ${
                     path === item.url
                       ? "bg-brand-10 font-semibold hover:bg-brand-10 text-brand-100"
                       : "hover:bg-brand-10"
                   }`}
                 >
-                  <Link href={item.url} className="flex items-center space-x-2">
+                  <Link
+                    href={item.url}
+                    className="flex items-center space-x-2.5"
+                  >
                     {item.icon && <item.icon size={18} className="shrink-0" />}
                     <span>{item.title}</span>
                   </Link>

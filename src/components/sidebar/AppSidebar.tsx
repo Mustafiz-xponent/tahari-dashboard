@@ -5,7 +5,14 @@ import { PiFarmLight } from "react-icons/pi";
 import { SidebarNav } from "@/components/sidebar/SidebarNav";
 import { IoPeopleOutline } from "react-icons/io5";
 import { MdOutlineInventory2 } from "react-icons/md";
-import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenuButton,
+  useSidebar,
+} from "@/components/ui/sidebar";
 import { FaPeopleCarryBox, FaHandHoldingDollar } from "react-icons/fa6";
 import {
   LayoutDashboard,
@@ -18,7 +25,6 @@ import {
   ChartColumnIncreasing,
 } from "lucide-react";
 import { UserRole } from "@/types/user";
-
 const navItems = [
   {
     title: "Dashboard",
@@ -107,8 +113,19 @@ const navItems = [
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { open } = useSidebar();
   return (
     <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <SidebarMenuButton className="h-16 font-secondary font-bold flex items-center space-x-1 text-typography-100 flex-wrap text-2xl">
+          {!open && <span className="text-brand-100">T</span>}{" "}
+          {open && (
+            <>
+              <span className="text-brand-100">Tahari</span> <span>Foods</span>
+            </>
+          )}
+        </SidebarMenuButton>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarNav items={navItems} />
       </SidebarContent>
