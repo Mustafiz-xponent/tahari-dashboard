@@ -116,12 +116,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <SidebarMenuButton className="h-16 font-secondary font-bold flex items-center space-x-1 text-typography-100 flex-wrap text-2xl">
+        <SidebarMenuButton className="h-9 font-secondary font-bold text-typography-100  text-2xl">
           {!open && <span className="text-brand-100">T</span>}{" "}
           {open && (
-            <>
+            <p>
               <span className="text-brand-100">Tahari</span> <span>Foods</span>
-            </>
+            </p>
           )}
         </SidebarMenuButton>
       </SidebarHeader>
