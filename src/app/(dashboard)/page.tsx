@@ -223,8 +223,8 @@ const Dasborad = () => {
                 <TableCell className="py-4 font-secondary">
                   {order.orderId}
                 </TableCell>
-                <TableCell>{order.date}</TableCell>
                 <TableCell>{order.customer}</TableCell>
+                <TableCell>{order.date}</TableCell>
                 <TableCell>{order.status}</TableCell>
                 <TableCell>{order.amount}</TableCell>
               </TableRow>
