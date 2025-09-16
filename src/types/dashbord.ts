@@ -25,3 +25,30 @@ export interface RecentOrders {
   status: string;
   totalAmount: string;
 }
+export interface MetricsData {
+  customer: {
+    changeLabel: string;
+    changePercentage: number;
+    totalCustomers: number;
+  };
+  order: {
+    changeLabel: string;
+    changePercentage: number;
+    totalOrders: number;
+  };
+  product: {
+    changeLabel: string;
+    changePercentage: number;
+    totalProducts: number;
+  };
+  revenue: {
+    changeLabel: string;
+    changePercentage: number;
+    totalRevenue: number;
+  };
+  subscription: {
+    changeLabel: string;
+    changePercentage: number;
+    totalActiveSubscriptions: number;
+  };
+}

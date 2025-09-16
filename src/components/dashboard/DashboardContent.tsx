@@ -2,13 +2,12 @@
 import React, { useState } from "react";
 import { ShieldAlert } from "lucide-react";
 import { BarChart } from "@/components/Charts";
-import { MetricCard } from "@/components/MetricCard";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   useGetDashboardSummaryQuery,
   useGetSalesOverviewQuery,
 } from "@/redux/services/dashboardApi";
-import { generateYearList, getTrendDirection } from "@/lib";
+import { generateYearList } from "@/lib";
 import { LowStockProduct } from "@/types/dashbord";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { ChartNoAxesCombined } from "lucide-react";
@@ -20,49 +19,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import RecentOrdersTable from "./RecentOrdersTable";
+import MetricCards from "./MetricCards";
 
 const DashboardContent = () => {
   const currentYear = new Date().getFullYear().toString();
   const [selectedYear, setSelectedYear] = useState<string>(currentYear);
-  const { data: summaryData, isLoading } = useGetDashboardSummaryQuery({});
+  const { data: summaryData, isLoading } =
+    useGetDashboardSummaryQuery(undefined);
   const { data: salesOverviewData } = useGetSalesOverviewQuery(selectedYear);
-
-  const metricsData = [
-    {
-      title: "Total Revenue",
-      value: summaryData?.data?.revenue?.totalRevenue,
-      valueType: "CURRENCY",
-      changeLabel: summaryData?.data?.revenue?.changeLabel,
-      change: summaryData?.data?.revenue?.changePercentage,
-      trend: getTrendDirection(summaryData?.data?.revenue?.changePercentage),
-    },
-    {
-      title: "Total Orders",
-      value: summaryData?.data?.order?.totalOrders,
-      valueType: "NUMBER",
-      changeLabel: summaryData?.data?.order?.changeLabel,
-      change: summaryData?.data?.order?.changePercentage,
-      trend: getTrendDirection(summaryData?.data?.order?.changePercentage),
-    },
-    {
-      title: "Active Subscriptions",
-      value: summaryData?.data?.subscription?.totalActiveSubscriptions,
-      valueType: "NUMBER",
-      changeLabel: summaryData?.data?.subscription?.changeLabel,
-      change: summaryData?.data?.subscription?.changePercentage,
-      trend: getTrendDirection(
-        summaryData?.data?.subscription?.changePercentage
-      ),
-    },
-    {
-      title: "Total Products",
-      value: summaryData?.data?.product?.totalProducts,
-      valueType: "NUMBER",
-      changeLabel: summaryData?.data?.product?.changeLabel,
-      change: summaryData?.data?.product?.changePercentage,
-      trend: getTrendDirection(summaryData?.data?.product?.changePercentage),
-    },
-  ];
 
   const minYear = salesOverviewData?.meta?.yearRange?.min;
   const maxYear = salesOverviewData?.meta?.yearRange?.max;
@@ -73,19 +37,7 @@ const DashboardContent = () => {
   return (
     <div className="space-y-6">
       {/* Metric Cards */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {metricsData?.map((metric, index) => (
-          <MetricCard
-            key={index}
-            title={metric.title}
-            value={metric.value}
-            valueType={metric.valueType as "NUMBER" | "CURRENCY" | "PERCENTAGE"}
-            changeLabel={metric.changeLabel}
-            change={metric.change}
-            trend={metric.trend as "UP" | "DOWN" | "NEUTRAL"}
-          />
-        ))}
-      </section>
+      <MetricCards data={summaryData?.data} />
       {/* Sales Overview Charts */}
       <section className="grid gap-4 grid-cols-1 lg:grid-cols-[55%_45%] w-full lg:w-[calc(100%-16px)]">
         <Card className="shadow-none rounded-md p-6">
@@ -95,7 +47,7 @@ const DashboardContent = () => {
                 Sales Overview
               </h3>
               <p className="font-secondary text-sm text-typography-50">
-                Monthly sales data for the current year
+                Monthly sales data for the year {selectedYear}
               </p>
             </div>
             <Select

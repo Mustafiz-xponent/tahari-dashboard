@@ -95,7 +95,7 @@ const RecentOrdersTable = ({ orders }: { orders: RecentOrders[] }) => {
                 <TableCell>{formatIsoDate(order?.orderDate)}</TableCell>
                 <TableCell>
                   <Badge
-                    className={`${orderStatusClasses(
+                    className={`rounded-sm ${orderStatusClasses(
                       order?.status as OrderStatus
                     )}`}
                   >
@@ -104,7 +104,7 @@ const RecentOrdersTable = ({ orders }: { orders: RecentOrders[] }) => {
                 </TableCell>
                 <TableCell>
                   <Badge
-                    className={`${paymentStatusClasses(
+                    className={`rounded-sm ${paymentStatusClasses(
                       order?.paymentStatus as PaymentStatus
                     )}`}
                   >
@@ -112,11 +112,11 @@ const RecentOrdersTable = ({ orders }: { orders: RecentOrders[] }) => {
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <Badge className="bg-gray-200 text-typography-75">
+                  <Badge className="rounded-sm bg-gray-200 text-typography-75">
                     {handleOrderType(order?.isSubscription, order?.isPreorder)}
                   </Badge>
                 </TableCell>
-                <TableCell className="flex  items-center">
+                <TableCell className="flex items-center">
                   <TbCurrencyTaka className="text-typography-50 text-xl" />
                   {order?.totalAmount}
                 </TableCell>
