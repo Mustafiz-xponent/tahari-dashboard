@@ -1,6 +1,7 @@
 import { authApi } from "@/redux/services/authApi";
 import userReducer from "@/redux/slices/userSlice";
 import { setupListeners } from "@reduxjs/toolkit/query";
+import { dashboardApi } from "@/redux/services/dashboardApi";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import { PersistConfig, persistReducer, persistStore } from "redux-persist";
@@ -29,6 +30,7 @@ const storage =
 const rootReducer = combineReducers({
   userReducer,
   [authApi.reducerPath]: authApi.reducer,
+  [dashboardApi.reducerPath]: dashboardApi.reducer,
 });
 
 // Define the persist config type
@@ -45,7 +47,8 @@ const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat(
-      authApi.middleware
+      authApi.middleware,
+      dashboardApi.middleware
     ),
 });
 

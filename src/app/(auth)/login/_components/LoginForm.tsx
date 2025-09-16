@@ -49,7 +49,7 @@ export default function LoginForm() {
     try {
       const response = await loginHandler(formData).unwrap();
       router.push("/");
-      dispatch(setUser(response?.data?.user));
+      dispatch(setUser(response?.data));
       const successMessage = response?.message || "Login successful.";
       toast.success(successMessage);
       form.reset();

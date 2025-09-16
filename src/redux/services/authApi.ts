@@ -10,9 +10,6 @@ export const authApi = createApi({
       query: (bodyData) => ({
         url: "/api/auth/admin/login",
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(bodyData),
       }),
     }),
@@ -21,9 +18,6 @@ export const authApi = createApi({
       query: (bodyData) => ({
         url: "/api/auth/admin/forgot-password",
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(bodyData),
       }),
     }),
@@ -31,9 +25,6 @@ export const authApi = createApi({
       query: (bodyData) => ({
         url: "/api/auth/admin/reset-password",
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(bodyData),
       }),
     }),
