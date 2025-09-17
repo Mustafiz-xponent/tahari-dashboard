@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Lock, Phone } from "lucide-react";
 import {
   Card,
@@ -10,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -30,6 +28,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { IApiError } from "@/types";
 import { toast } from "sonner";
 import Link from "next/link";
+import FormSubmitBtn from "@/components/common/FormSubmitBtn";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -151,23 +150,7 @@ export default function LoginForm() {
                   Forgot password?
                 </Link>
               </div>
-
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full h-12 hover:bg-btn-hover bg-brand-100 text-primary-foreground cursor-pointer font-medium shadow-subtle hover:shadow-form transition-all duration-300 hover:scale-[1.01]"
-              >
-                {isLoading ? (
-                  <LoadingSpinner
-                    color="#fff"
-                    size={25}
-                    borderWidth="3px"
-                    height="100%"
-                  />
-                ) : (
-                  "Login"
-                )}
-              </Button>
+              <FormSubmitBtn isLoading={isLoading} text="Login" />
             </form>
           </Form>
         </CardContent>

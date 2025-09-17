@@ -4,7 +4,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 export const dashboardApi = createApi({
   reducerPath: "dashboardApi", // Unique reducerPath
   baseQuery,
-  tagTypes: ["DashboardSummary", "SalesOverview"],
+  tagTypes: ["DASHBORAD_SUMMARY", "SALES_OVERVIEW"],
   refetchOnMountOrArgChange: true,
   refetchOnFocus: true,
   refetchOnReconnect: true,
@@ -15,7 +15,7 @@ export const dashboardApi = createApi({
         url: `/api/dashboard/summary`,
         method: "GET",
       }),
-      providesTags: ["DashboardSummary"],
+      providesTags: ["DASHBORAD_SUMMARY"],
       extraOptions: { pollingInterval: 60000 }, // refetch data every 60 seconds
     }),
     getSalesOverview: builder.query({
@@ -23,7 +23,7 @@ export const dashboardApi = createApi({
         url: `/api/dashboard/sales-overview?year=${year}`,
         method: "GET",
       }),
-      providesTags: ["SalesOverview"],
+      providesTags: ["SALES_OVERVIEW"],
       extraOptions: { pollingInterval: 60000 }, // refetch data every 60 seconds
     }),
   }),

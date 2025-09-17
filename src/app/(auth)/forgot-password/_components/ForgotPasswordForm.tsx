@@ -1,6 +1,5 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Phone, Fingerprint, MoveLeft } from "lucide-react";
 import {
   Card,
@@ -9,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -33,6 +31,7 @@ import {
   setOtpResendCooldown,
 } from "@/redux/slices/userSlice";
 import { useEffect } from "react";
+import FormSubmitBtn from "@/components/common/FormSubmitBtn";
 
 const ForgotPasswordForm = () => {
   const [forgotPasswordHandler, { isLoading }] = useForgotPasswordMutation();
@@ -123,23 +122,7 @@ const ForgotPasswordForm = () => {
                   </FormItem>
                 )}
               />
-
-              <Button
-                type="submit"
-                disabled={isLoading || otpResendCooldown > 0}
-                className="w-full h-12 hover:bg-btn-hover bg-brand-100 text-primary-foreground cursor-pointer font-medium shadow-subtle hover:shadow-form transition-all duration-300 hover:scale-[1.01]"
-              >
-                {isLoading ? (
-                  <LoadingSpinner
-                    color="#fff"
-                    size={25}
-                    borderWidth="3px"
-                    height="100%"
-                  />
-                ) : (
-                  "Submit"
-                )}
-              </Button>
+              <FormSubmitBtn isLoading={isLoading} text="Submit" />
             </form>
           </Form>
 

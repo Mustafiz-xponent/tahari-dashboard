@@ -1,5 +1,6 @@
 import { authApi } from "@/redux/services/authApi";
 import userReducer from "@/redux/slices/userSlice";
+import { farmerApi } from "@/redux/services/farmerApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { dashboardApi } from "@/redux/services/dashboardApi";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   userReducer,
   [authApi.reducerPath]: authApi.reducer,
   [dashboardApi.reducerPath]: dashboardApi.reducer,
+  [farmerApi.reducerPath]: farmerApi.reducer,
 });
 
 // Define the persist config type
@@ -48,7 +50,8 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat(
       authApi.middleware,
-      dashboardApi.middleware
+      dashboardApi.middleware,
+      farmerApi.middleware
     ),
 });
 

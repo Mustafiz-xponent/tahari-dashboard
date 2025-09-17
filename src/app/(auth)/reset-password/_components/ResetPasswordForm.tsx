@@ -20,7 +20,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -46,6 +45,7 @@ import BarStepper from "@/app/(auth)/reset-password/_components/BarStepper";
 import ResendCodeBtn from "./ResendCodeBtn";
 import { useAppDispatch } from "@/redux/hooks";
 import { clearForgotPasswordPhone } from "@/redux/slices/userSlice";
+import FormSubmitBtn from "@/components/common/FormSubmitBtn";
 type Step = 1 | 2 | 3;
 
 const ResetPasswordForm = () => {
@@ -279,22 +279,7 @@ const ResetPasswordForm = () => {
                       </FormItem>
                     )}
                   />
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full h-12 hover:bg-btn-hover bg-brand-100 text-primary-foreground cursor-pointer font-medium shadow-subtle hover:shadow-form transition-all duration-300 hover:scale-[1.01]"
-                  >
-                    {isLoading ? (
-                      <LoadingSpinner
-                        color="#fff"
-                        size={25}
-                        borderWidth="3px"
-                        height="100%"
-                      />
-                    ) : (
-                      "Submit"
-                    )}
-                  </Button>
+                  <FormSubmitBtn isLoading={isLoading} text="Reset Password" />
                   <Button
                     type="button"
                     onClick={handlePreviousStep}
