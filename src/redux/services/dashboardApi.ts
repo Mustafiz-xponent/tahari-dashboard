@@ -5,8 +5,8 @@ export const dashboardApi = createApi({
   reducerPath: "dashboardApi", // Unique reducerPath
   baseQuery,
   tagTypes: ["DASHBORAD_SUMMARY", "SALES_OVERVIEW"],
-  refetchOnMountOrArgChange: true,
-  refetchOnFocus: true,
+  // refetchOnMountOrArgChange: true,
+  // refetchOnFocus: true,
   refetchOnReconnect: true,
 
   endpoints: (builder) => ({
