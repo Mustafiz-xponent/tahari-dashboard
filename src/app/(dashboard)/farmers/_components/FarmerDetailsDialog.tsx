@@ -14,6 +14,7 @@ interface FarmerDetailsDialogProps {
   data: Farmer;
 }
 const FarmerDetailsDialog = ({ data }: FarmerDetailsDialogProps) => {
+  console.log("DATA:", data);
   return (
     <Dialog>
       <DialogTrigger asChild>

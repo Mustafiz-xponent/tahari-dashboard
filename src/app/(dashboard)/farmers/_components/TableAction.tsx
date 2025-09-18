@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const TableAction = ({ data }: { data: Farmer }) => {
-  const [open, setOpen] = React.useState<boolean>(false);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="font-secondaryr  pl-1">
