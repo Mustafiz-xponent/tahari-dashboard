@@ -1,5 +1,5 @@
 import React from "react";
-import { DataTableDynamic } from "@/app/(dashboard)/farmers/_components/DataTable";
+import { DataTable } from "@/app/(dashboard)/farmers/_components/DataTable";
 import AddFarmerDialog from "@/app/(dashboard)/farmers/_components/AddFarmerDialog";
 
 const Farmers = () => {
@@ -17,7 +17,8 @@ const Farmers = () => {
         {/* Add farmer Dialog */}
         <AddFarmerDialog />
       </header>
-      <DataTableDynamic />
+      {/* Farmers list table */}
+      <DataTable />
     </div>
   );
 };

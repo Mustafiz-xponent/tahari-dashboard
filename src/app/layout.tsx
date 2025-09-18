@@ -2,8 +2,8 @@ import "./globals.css";
 
 import { Toaster } from "sonner";
 import type { Metadata } from "next";
+import { Poppins, Inter } from "next/font/google";
 import ReduxProvider from "@/providers/ReduxProvider";
-import { Poppins, Inter, Geist_Mono } from "next/font/google";
 
 const poppins = Poppins({
   subsets: ["latin"],

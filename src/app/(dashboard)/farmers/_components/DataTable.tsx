@@ -5,8 +5,6 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -16,47 +14,51 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useGetAllFarmersQuery } from "@/redux/services/farmerApi";
-import { farmerTableColumns } from "@/app/(dashboard)/farmers/_components/TableColumns";
+import { DataTablePagination } from "@/components/common/DataTablePagination";
+import { Columns } from "@/app/(dashboard)/farmers/_components/Columns";
+import { useSearchParams } from "next/navigation";
+import SearchInput from "@/app/(dashboard)/farmers/_components/SearchInput";
+import { DataTableSkeleton } from "@/components/common/DataTableSkeleton";
 
-export function DataTableDynamic() {
-  const [page, setPage] = React.useState<number>(1);
-  const [search, setSearch] = React.useState<string>("");
-  const [limit, setLimit] = React.useState<number>(10);
+export function DataTable() {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search") ?? "";
+  const limit = searchParams.get("limit") ?? "10";
+  const page = searchParams.get("page") ?? "1";
+  console.log("PAGE:", page);
+
   const query = { search, limit, page };
-  const { data, isLoading } = useGetAllFarmersQuery(query);
+  const { data, isLoading, isFetching } = useGetAllFarmersQuery(query);
 
   const farmers = data?.data ?? [];
-  const total = data?.pagination?.totalItems ?? 0;
+  const pageCount = data?.pagination?.totalPages ?? 0;
 
   const table = useReactTable({
     data: farmers,
-    columns: farmerTableColumns,
+    columns: Columns,
+    pageCount,
     manualPagination: true,
-    pageCount: Math.ceil(total / limit),
     getCoreRowModel: getCoreRowModel(),
+    getRowId: (originalRow) => originalRow.farmerId,
+    initialState: {
+      pagination: {
+        pageIndex: Number(page) - 1,
+        pageSize: Number(limit),
+      },
+    },
   });
 
   return (
     <div className="w-full border rounded-lg p-6 bg-white">
-      {/* Search input */}
-      <div className="flex items-center pb-4">
-        <Input
-          placeholder="Farm Name..."
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1); // reset on search
-          }}
-          className="max-w-sm h-10 text-sm border-border focus-visible:border-border focus-visible:ring-0 font-secondary "
-        />
-      </div>
-
-      {/* Table */}
+      <SearchInput /> {/* Search input */}
       <div className="overflow-hidden rounded-md border">
-        {isLoading ? (
-          <div className="p-6 h-80 flex items-center justify-center text-typography-50 font-secondary">
-            Loading...
-          </div>
+        {isLoading || isFetching ? (
+          <DataTableSkeleton
+            columnCount={Columns.length}
+            filterCount={0}
+            withPagination={false}
+            withViewOptions={false}
+          />
         ) : (
           <Table>
             <TableHeader>
@@ -93,7 +95,7 @@ export function DataTableDynamic() {
               ) : (
                 <TableRow className="h-40">
                   <TableCell
-                    colSpan={farmerTableColumns.length}
+                    colSpan={Columns.length}
                     className="text-center font-secondary text-typography-50 text-sm h-80"
                   >
                     No results
@@ -104,9 +106,9 @@ export function DataTableDynamic() {
           </Table>
         )}
       </div>
-
+      <DataTablePagination table={table} />
       {/* Pagination */}
-      <div className="flex justify-end items-center font-secondary pt-4 space-x-2">
+      {/* <div className="flex justify-end items-center font-secondary pt-4 space-x-2">
         <Button
           variant="outline"
           size="sm"
@@ -126,7 +128,7 @@ export function DataTableDynamic() {
         >
           Next
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }

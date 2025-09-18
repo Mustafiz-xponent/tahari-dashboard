@@ -2,7 +2,7 @@
 import * as React from "react";
 import { BsCartCheck } from "react-icons/bs";
 import { PiFarmLight } from "react-icons/pi";
-import { SidebarNav } from "@/components/sidebar/SidebarNav";
+import { SidebarNav } from "@/app/(dashboard)/_components/SidebarNav";
 import { IoPeopleOutline } from "react-icons/io5";
 import { MdOutlineInventory2 } from "react-icons/md";
 import {

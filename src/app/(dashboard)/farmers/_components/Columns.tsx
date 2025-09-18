@@ -19,7 +19,7 @@ export type Farmer = {
 interface Product {
   name: string;
 }
-export const farmerTableColumns: ColumnDef<Farmer>[] = [
+export const Columns: ColumnDef<Farmer>[] = [
   {
     accessorKey: "farmerId",
     header: "ID",
