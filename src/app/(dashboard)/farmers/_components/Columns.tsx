@@ -1,13 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Eye, Pencil, Trash, MoreHorizontal } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import TableAction from "@/app/(dashboard)/farmers/_components/TableAction";
 
 export type Farmer = {
   address: string;
@@ -70,31 +62,9 @@ export const Columns: ColumnDef<Farmer>[] = [
   {
     id: "actions",
     accessorKey: "Actions",
-    cell: ({}) => {
-      //   const farmer = row.original;
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="font-secondaryr  pl-1">
-            <div className="h-8 w-8 p-0 font-secondary flex items-center cursor-pointer justify-center">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="size-5" />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="font-secondary">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <Eye /> View farmer
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Pencil /> Edit Farmer
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Trash className="text-red-500" /> Delete Farmer
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+    cell: ({ row }) => {
+      const farmer = row.original;
+      return <TableAction data={farmer} />;
     },
   },
 ];

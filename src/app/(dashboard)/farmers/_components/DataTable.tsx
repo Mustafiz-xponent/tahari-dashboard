@@ -25,7 +25,6 @@ export function DataTable() {
   const search = searchParams.get("search") ?? "";
   const limit = searchParams.get("limit") ?? "10";
   const page = searchParams.get("page") ?? "1";
-  console.log("PAGE:", page);
 
   const query = { search, limit, page };
   const { data, isLoading, isFetching } = useGetAllFarmersQuery(query);
@@ -107,28 +106,6 @@ export function DataTable() {
         )}
       </div>
       <DataTablePagination table={table} />
-      {/* Pagination */}
-      {/* <div className="flex justify-end items-center font-secondary pt-4 space-x-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setPage((p) => Math.max(p - 1, 1))}
-          disabled={page === 1}
-        >
-          Previous
-        </Button>
-        <span className="text-sm font-secondary">
-          Page {page} of {data?.pagination?.totalPages ?? 0}
-        </span>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setPage((p) => (p * limit < total ? p + 1 : p))}
-          disabled={page * limit >= total}
-        >
-          Next
-        </Button>
-      </div> */}
     </div>
   );
 }
