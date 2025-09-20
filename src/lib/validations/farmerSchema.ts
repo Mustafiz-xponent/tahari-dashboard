@@ -11,3 +11,10 @@ export const createFarmerSchema = z.object({
   address: z.string().min(1, "Address is required"),
   contactInfo: bdPhoneValidator.optional(),
 });
+
+export const editFarmerSchema = z.object({
+  name: z.string().min(1).optional(),
+  farmName: z.string().min(1).optional(),
+  address: z.string().min(1).optional(),
+  contactInfo: bdPhoneValidator.optional(),
+});

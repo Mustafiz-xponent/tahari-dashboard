@@ -12,38 +12,59 @@ import FormSubmitBtn from "@/components/common/FormSubmitBtn";
 import { FormTextarea } from "@/components/common/FormTextArea";
 import { DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useCreateFarmerMutation } from "@/redux/services/farmerApi";
+import {
+  useCreateFarmerMutation,
+  useUpdateFarmerMutation,
+} from "@/redux/services/farmerApi";
 
-interface AddFarmerFormProps {
+interface FarmerFormProps {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  initialData?: z.infer<typeof createFarmerSchema> & { farmerId?: string }; // allow id for edit mode
 }
-const AddFarmerForm = ({ setDialogOpen }: AddFarmerFormProps) => {
-  const [createFarmerHandler, { isLoading }] = useCreateFarmerMutation();
+
+const FarmerForm = ({ setDialogOpen, initialData }: FarmerFormProps) => {
+  const [createFarmerHandler, { isLoading: isCreating }] =
+    useCreateFarmerMutation();
+  const [updateFarmerHandler, { isLoading: isUpdating }] =
+    useUpdateFarmerMutation();
+
+  const isEdit = Boolean(initialData?.farmerId);
+
   const form = useForm<z.infer<typeof createFarmerSchema>>({
     resolver: zodResolver(createFarmerSchema),
-    defaultValues: {
+    defaultValues: initialData || {
       name: "",
       farmName: "",
       address: "",
       contactInfo: "",
     },
   });
+
   async function onSubmit(formData: z.infer<typeof createFarmerSchema>) {
     try {
-      const response = await createFarmerHandler(formData).unwrap();
+      let response;
+      if (isEdit && initialData?.farmerId) {
+        response = await updateFarmerHandler({
+          farmerId: initialData.farmerId,
+          bodyData: formData,
+        }).unwrap();
+      } else {
+        response = await createFarmerHandler(formData).unwrap();
+      }
+
       if (response.success) {
-        const successMessage = response?.message || "An Otp has been sent.";
-        toast.success(successMessage);
+        toast.success(
+          response?.message || (isEdit ? "Farmer updated." : "Farmer created.")
+        );
         form.reset();
         setDialogOpen(false);
       }
     } catch (err: unknown) {
       const error = err as IApiError;
-      const errorMessage =
-        error?.data?.error?.message || "Something went wrong.";
-      toast.error(errorMessage);
+      toast.error(error?.data?.error?.message || "Something went wrong.");
     }
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -51,7 +72,7 @@ const AddFarmerForm = ({ setDialogOpen }: AddFarmerFormProps) => {
           control={form.control}
           name="name"
           label="Name"
-          placeholder="Jhone Smith"
+          placeholder="John Smith"
         />
         <InputField
           control={form.control}
@@ -73,21 +94,22 @@ const AddFarmerForm = ({ setDialogOpen }: AddFarmerFormProps) => {
           label="Contact Info"
           placeholder="+8801XXXXXXXXX"
         />
+
         <div className="flex items-center justify-end gap-2">
           <DialogClose asChild>
             <Button
               type="button"
               variant="outline"
-              disabled={isLoading}
-              className="font-secondary cursor-pointer h-10"
+              disabled={isCreating || isUpdating}
+              className="font-secondary h-10"
             >
               Cancel
             </Button>
           </DialogClose>
           <FormSubmitBtn
-            text="Create Farmer"
-            isLoading={isLoading}
-            className="w-fit min-w-[100px] h-10"
+            text={isEdit ? "Update Farmer" : "Create Farmer"}
+            isLoading={isCreating || isUpdating}
+            className="w-fit min-w-[120px] h-10"
             spinnerSize={23}
           />
         </div>
@@ -96,4 +118,4 @@ const AddFarmerForm = ({ setDialogOpen }: AddFarmerFormProps) => {
   );
 };
 
-export default AddFarmerForm;
+export default FarmerForm;

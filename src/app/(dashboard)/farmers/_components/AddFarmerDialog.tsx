@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AddFarmerForm from "@/app/(dashboard)/farmers/_components/AddFarmerForm";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import FarmerForm from "@/app/(dashboard)/farmers/_components/FarmerForm";
 
 const AddFarmerDialog = () => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -34,7 +34,7 @@ const AddFarmerDialog = () => {
             Create a new farmer profile. Fill in all the required information.
           </DialogDescription>
         </DialogHeader>
-        <AddFarmerForm setDialogOpen={setDialogOpen} />
+        <FarmerForm setDialogOpen={setDialogOpen} />
       </DialogContent>
     </Dialog>
   );

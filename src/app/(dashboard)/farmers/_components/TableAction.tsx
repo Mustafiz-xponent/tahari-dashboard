@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Farmer } from "@/types/farmer";
-import { Pencil, Trash, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import FarmerDetailsDialog from "@/app/(dashboard)/farmers/_components/FarmerDetailsDialog";
 import {
   DropdownMenu,
@@ -11,6 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import FarmerDeleteDialog from "@/app/(dashboard)/farmers/_components/FarmerDeleteDialog";
+import EditFarmerDialog from "@/app/(dashboard)/farmers/_components/EditFarmerDialog";
 
 const TableAction = ({ data }: { data: Farmer }) => {
   return (
@@ -23,22 +25,15 @@ const TableAction = ({ data }: { data: Farmer }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="font-secondary">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.preventDefault();
-          }}
-          onSelect={(e) => {
-            e.stopPropagation();
-          }}
-        >
+        <DropdownMenuItem asChild>
           <FarmerDetailsDialog data={data} />
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Pencil /> Edit Farmer
+        <DropdownMenuItem asChild>
+          <EditFarmerDialog farmer={data} />
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Trash className="text-red-500" /> Delete Farmer
+        <DropdownMenuItem asChild>
+          <FarmerDeleteDialog farmerId={data?.farmerId} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -42,7 +42,7 @@ export const farmerApi = createApi({
     updateFarmer: builder.mutation({
       query: ({ farmerId, bodyData }) => ({
         url: `/api/farmers/${farmerId}`,
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify(bodyData),
       }),
       invalidatesTags: ["FARMER"],

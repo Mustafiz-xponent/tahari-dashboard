@@ -18,12 +18,11 @@ interface FarmerDetailsDialogProps {
   data: Farmer;
 }
 const FarmerDetailsDialog = ({ data }: FarmerDetailsDialogProps) => {
-  console.log("DATA:", data);
   return (
     <Dialog>
       <DialogTrigger asChild>
         <button className="flex gap-2 items-center font-secondary cursor-pointer">
-          <Eye /> View farmer
+          <Eye /> View Details
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl rounded-sm  max-h-[90vh] no-scrollbar overflow-y-scroll">
