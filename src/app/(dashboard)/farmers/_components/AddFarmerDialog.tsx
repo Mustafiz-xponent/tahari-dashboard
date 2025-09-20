@@ -19,14 +19,14 @@ const AddFarmerDialog = () => {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="h-11 font-secondary rounded-sm cursor-pointer text-typography-5 hover:text-white bg-brand-100 hover:bg-btn-hover"
+          className="h-11 w-fit self-end font-secondary rounded-sm cursor-pointer text-typography-5 hover:text-white bg-brand-100 hover:bg-btn-hover"
         >
           <Plus />
           <span>Add Farmer</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-xl rounded-sm  max-h-[90vh] no-scrollbar overflow-y-scroll">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-xl  rounded-sm  max-h-[90vh] no-scrollbar overflow-y-scroll">
+        <DialogHeader className="text-start mt-2">
           <DialogTitle className="font-secondary text-xl">
             Add New Farmer
           </DialogTitle>

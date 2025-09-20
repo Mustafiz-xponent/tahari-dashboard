@@ -5,7 +5,7 @@ import AddFarmerDialog from "@/app/(dashboard)/farmers/_components/AddFarmerDial
 const Farmers = () => {
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
+      <header className="flex sm:items-center gap-y-4 sm:flex-row flex-col justify-between">
         <div>
           <h2 className="font-secondary  text-typography-100 tracking-tight text-2xl font-bold">
             Farmer Management

@@ -45,7 +45,7 @@ const FarmerDeleteDialog = ({ farmerId }: { farmerId: string }) => {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl rounded-sm  max-h-[90vh] no-scrollbar overflow-y-scroll">
-        <DialogHeader>
+        <DialogHeader className="text-start mt-2">
           <DialogTitle className="font-secondary text-xl capitalize">
             Are you sure you want to delete this farmer?
           </DialogTitle>
@@ -57,12 +57,12 @@ const FarmerDeleteDialog = ({ farmerId }: { farmerId: string }) => {
             .
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="flex items-end w-full justify-end">
+        <DialogFooter className="flex items-end flex-row gap-2 w-full justify-end">
           <DialogClose asChild>
             <Button
               type="button"
               variant={"outline"}
-              className="cursor-pointer w-fit  text-typography-100 font-secondary"
+              className="cursor-pointer sm:w-fit w-1/2  text-typography-100 font-secondary"
             >
               Close
             </Button>
@@ -72,7 +72,7 @@ const FarmerDeleteDialog = ({ farmerId }: { farmerId: string }) => {
             variant={"destructive"}
             disabled={isLoading}
             onClick={submitHandler()}
-            className="cursor-pointer text-white font-secondary"
+            className="cursor-pointer sm:w-fit w-1/2 text-white font-secondary"
           >
             {isLoading ? (
               <LoadingSpinner

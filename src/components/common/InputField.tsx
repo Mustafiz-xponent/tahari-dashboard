@@ -51,7 +51,7 @@ export function InputField<TFieldValues extends FieldValues>({
               type={type}
               {...field}
               className={twMerge(
-                `pl-4 h-11 border-border font-secondary focus-visible:border-border focus-visible:ring-0 transition-smooth`,
+                `pl-4 h-11 border-border placeholder:text-sm text-sm font-secondary focus-visible:border-border focus-visible:ring-0 transition-smooth`,
                 inputClassName
               )}
             />

@@ -95,13 +95,13 @@ const FarmerForm = ({ setDialogOpen, initialData }: FarmerFormProps) => {
           placeholder="+8801XXXXXXXXX"
         />
 
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center w-full sm:justify-end gap-2">
           <DialogClose asChild>
             <Button
               type="button"
               variant="outline"
               disabled={isCreating || isUpdating}
-              className="font-secondary h-10 cursor-pointer"
+              className="font-secondary sm:w-fit w-1/2 h-10 cursor-pointer"
             >
               Cancel
             </Button>
@@ -109,7 +109,7 @@ const FarmerForm = ({ setDialogOpen, initialData }: FarmerFormProps) => {
           <FormSubmitBtn
             text={isEdit ? "Update Farmer" : "Create Farmer"}
             isLoading={isCreating || isUpdating}
-            className="w-fit min-w-[120px] h-10"
+            className="sm:w-fit w-1/2 min-w-[120px] h-10"
             spinnerSize={23}
           />
         </div>

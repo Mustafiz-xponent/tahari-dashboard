@@ -30,7 +30,7 @@ const FarmerDetailsDialog = ({ data }: FarmerDetailsDialogProps) => {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl rounded-sm  max-h-[90vh] no-scrollbar overflow-y-scroll">
-        <DialogHeader>
+        <DialogHeader className="text-start mt-2">
           <DialogTitle className="font-secondary text-xl capitalize">
             {data?.name}
           </DialogTitle>

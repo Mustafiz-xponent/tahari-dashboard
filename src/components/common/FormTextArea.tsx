@@ -52,7 +52,7 @@ export function FormTextarea<TFieldValues extends FieldValues>({
               rows={rows}
               {...field}
               className={twMerge(
-                `pl-4 border-border font-primary focus-visible:border-border focus-visible:ring-0 transition-smooth`,
+                `pl-4 border-border placeholder:text-sm  text-sm font-primary focus-visible:border-border focus-visible:ring-0 transition-smooth`,
                 inputClassName
               )}
             />
