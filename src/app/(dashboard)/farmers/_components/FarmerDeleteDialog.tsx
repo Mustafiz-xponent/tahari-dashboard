@@ -23,7 +23,6 @@ const FarmerDeleteDialog = ({ farmerId }: { farmerId: string }) => {
   const submitHandler = () => async () => {
     try {
       const response = await deleteFarmerHandler(farmerId).unwrap();
-      console.log("DELETE FARMER RESPONSE:", response);
       if (response?.success) {
         toast.success(response?.message || "Farmer deleted successfully.");
       }
@@ -37,9 +36,13 @@ const FarmerDeleteDialog = ({ farmerId }: { farmerId: string }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="flex gap-2 text-red-500 items-center font-secondary cursor-pointer">
+        <Button
+          variant={"ghost"}
+          size={"sm"}
+          className="flex gap-2 text-red-500 w-full items-center justify-start font-secondary text-sm cursor-pointer"
+        >
           <Trash className="text-red-500" /> Delete
-        </button>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl rounded-sm  max-h-[90vh] no-scrollbar overflow-y-scroll">
         <DialogHeader>

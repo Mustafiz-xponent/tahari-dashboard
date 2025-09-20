@@ -12,15 +12,20 @@ import {
 
 import FarmerForm from "./FarmerForm";
 import { Farmer } from "@/types/farmer";
+import { Button } from "@/components/ui/button";
 
 const EditFarmerDialog = ({ farmer }: { farmer: Farmer }) => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <button className="flex gap-2 items-center font-secondary cursor-pointer">
+        <Button
+          variant={"ghost"}
+          size={"sm"}
+          className="flex gap-2 w-full items-center justify-start font-secondary text-sm text-typography-75 cursor-pointer"
+        >
           <PencilIcon /> Edit
-        </button>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl rounded-sm  max-h-[90vh] no-scrollbar overflow-y-scroll">
         <DialogHeader>

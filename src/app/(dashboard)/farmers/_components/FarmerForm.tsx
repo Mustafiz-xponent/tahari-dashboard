@@ -101,7 +101,7 @@ const FarmerForm = ({ setDialogOpen, initialData }: FarmerFormProps) => {
               type="button"
               variant="outline"
               disabled={isCreating || isUpdating}
-              className="font-secondary h-10"
+              className="font-secondary h-10 cursor-pointer"
             >
               Cancel
             </Button>
