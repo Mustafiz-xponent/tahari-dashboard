@@ -42,7 +42,6 @@ export function DataTablePagination<TData>({
         const params = new URLSearchParams(searchParams.toString());
         params.set("page", String(pageIndex + 1));
         params.set("limit", String(limit));
-
         router.replace(`?${params.toString()}`);
       }, 300), // delay 300ms
     [pageIndex, limit, router, searchParams]
