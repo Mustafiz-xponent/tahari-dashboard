@@ -16,7 +16,7 @@ const SearchInput = () => {
   return (
     <div className="flex items-center pb-4">
       <Input
-        placeholder="Search Farm's..."
+        placeholder="Search Categories..."
         value={value}
         onChange={(e) => setValue(e.target.value)}
         className="max-w-sm h-10 text-sm border-border focus-visible:border-border focus-visible:ring-0 font-secondary "
