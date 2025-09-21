@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { IApiError } from "@/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFarmerSchema } from "@/lib/validations/farmerSchema";
 import { Form } from "@/components/ui/form";
 import { InputField } from "@/components/common/InputField";
 import FormSubmitBtn from "@/components/common/FormSubmitBtn";
@@ -21,7 +20,7 @@ import { FileField } from "@/components/common/FileField";
 
 interface CategoryFormProps {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  initialData?: z.infer<typeof createFarmerSchema> & { categoryId?: string }; // allow id for edit mode
+  initialData?: z.infer<typeof createCategorySchema> & { categoryId?: string }; // allow id for edit mode
 }
 
 const CategoryForm = ({ setDialogOpen, initialData }: CategoryFormProps) => {
@@ -52,7 +51,7 @@ const CategoryForm = ({ setDialogOpen, initialData }: CategoryFormProps) => {
           bodyData: formData,
         }).unwrap();
       } else {
-        // response = await createCategoryHandler(formData).unwrap();
+        response = await createCategoryHandler(formData).unwrap();
       }
 
       if (response.success) {

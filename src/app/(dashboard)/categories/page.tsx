@@ -1,4 +1,5 @@
 import React from "react";
+import { DataTable } from "@/app/(dashboard)/categories/_components/DataTable";
 import AddCategoryDialog from "@/app/(dashboard)/categories/_components/AddCategoryDialog";
 
 const Categories = () => {
@@ -17,7 +18,7 @@ const Categories = () => {
         <AddCategoryDialog />
       </header>
       {/* Categories list table */}
-      {/* <DataTable /> */}
+      <DataTable />
     </div>
   );
 };

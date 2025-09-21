@@ -1,16 +1,8 @@
+import { Farmer } from "@/types/farmer";
+import { Product } from "@/types/product";
 import { ColumnDef } from "@tanstack/react-table";
 import TableAction from "@/app/(dashboard)/farmers/_components/TableAction";
 
-export type Farmer = {
-  address: string;
-  contactInfo: string;
-  farmName: string;
-  farmerId: string;
-  name: string;
-};
-interface Product {
-  name: string;
-}
 export const Columns: ColumnDef<Farmer>[] = [
   {
     accessorKey: "farmerId",

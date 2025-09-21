@@ -38,7 +38,7 @@ export default function ErrorPage({
 
           {/* Error details box */}
           <div className="bg-gray-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg">
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3 overflow-x-auto">
               <Code className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
               <div>
                 <p className="font-semibold font-secondary text-gray-800 text-sm mb-1">
