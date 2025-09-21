@@ -1,29 +1,17 @@
 "use client";
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { useRouter, useSearchParams } from "next/navigation";
-import { debounce } from "lodash";
+import { useSearchParams } from "next/navigation";
+import { useQuery } from "@/hooks/use-query";
 
 const SearchInput = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [value, setValue] = useState<string>(searchParams.get("search") ?? "");
 
-  const handleSearch = React.useMemo(
-    () =>
-      debounce((val: string) => {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("search", val.trim());
-        params.set("page", "1"); // reset page on new search
-        router.replace(`?${params.toString()}`);
-      }, 300),
-    [router, searchParams]
-  );
-
-  React.useEffect(() => {
-    handleSearch(value);
-    return () => handleSearch.cancel();
-  }, [value, handleSearch]);
+  const query = React.useMemo(() => ({ search: value }), [value]);
+  useQuery({
+    query,
+  });
 
   return (
     <div className="flex items-center pb-4">

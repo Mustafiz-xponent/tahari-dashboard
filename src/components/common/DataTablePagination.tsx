@@ -1,9 +1,8 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { debounce } from "lodash";
+import { useQuery } from "@/hooks/use-query";
 import { Button } from "@/components/ui/button";
 import type { Table } from "@tanstack/react-table";
-import { useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
@@ -29,28 +28,22 @@ export function DataTablePagination<TData>({
   className,
   ...props
 }: DataTablePaginationProps<TData>) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
   // Current page & size from table
   const pageIndex = table.getState().pagination.pageIndex;
   const limit = table.getState().pagination.pageSize;
 
-  const handlePagination = React.useMemo(
-    () =>
-      debounce(() => {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("page", String(pageIndex + 1));
-        params.set("limit", String(limit));
-        router.replace(`?${params.toString()}`);
-      }, 300), // delay 300ms
-    [pageIndex, limit, router, searchParams]
+  const query = React.useMemo(
+    () => ({
+      page: String(pageIndex + 1),
+      limit: String(limit),
+    }),
+    [pageIndex, limit]
   );
 
-  React.useEffect(() => {
-    handlePagination();
-    return () => handlePagination.cancel(); // cleanup
-  }, [handlePagination]);
+  useQuery({
+    query,
+    resetPageOn: ["search", "sort"],
+  });
 
   return (
     <div

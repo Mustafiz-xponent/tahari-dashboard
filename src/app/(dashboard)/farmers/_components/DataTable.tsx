@@ -46,6 +46,11 @@ export function DataTable() {
       },
     },
   });
+  // update table pagination state when query params change
+  React.useEffect(() => {
+    table.setPageIndex(Number(page) - 1);
+    table.setPageSize(Number(limit));
+  }, [table, page, limit]);
 
   return (
     <div className="w-full border rounded-lg p-6 bg-white">
