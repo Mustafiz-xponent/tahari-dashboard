@@ -38,15 +38,15 @@ const navItems = [
     allowedRoles: [UserRole.ADMIN, UserRole.SUPER_ADMIN],
   },
   {
-    title: "Products",
-    url: "/products",
-    icon: Box,
-    allowedRoles: [UserRole.ADMIN, UserRole.SUPER_ADMIN],
-  },
-  {
     title: "Categories",
     url: "/categories",
     icon: List,
+    allowedRoles: [UserRole.ADMIN, UserRole.SUPER_ADMIN],
+  },
+  {
+    title: "Products",
+    url: "/products",
+    icon: Box,
     allowedRoles: [UserRole.ADMIN, UserRole.SUPER_ADMIN],
   },
   {

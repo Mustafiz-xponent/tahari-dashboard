@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useDeleteFarmerMutation } from "@/redux/services/farmerApi";
+import { useDeleteFarmerMutation } from "@/redux/services/farmersApi";
 import { toast } from "sonner";
 import { IApiError } from "@/types";
 import LoadingSpinner from "@/components/common/LoadingSpinner";

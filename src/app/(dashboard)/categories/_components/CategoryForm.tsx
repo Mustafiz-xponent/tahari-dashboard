@@ -13,48 +13,52 @@ import { FormTextarea } from "@/components/common/FormTextArea";
 import { DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
-  useCreateFarmerMutation,
-  useUpdateFarmerMutation,
-} from "@/redux/services/farmersApi";
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+} from "@/redux/services/categoriesApi";
+import { createCategorySchema } from "@/lib/validations/categorySchema";
+import { FileField } from "@/components/common/FileField";
 
-interface FarmerFormProps {
+interface CategoryFormProps {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  initialData?: z.infer<typeof createFarmerSchema> & { farmerId?: string }; // allow id for edit mode
+  initialData?: z.infer<typeof createFarmerSchema> & { categoryId?: string }; // allow id for edit mode
 }
 
-const FarmerForm = ({ setDialogOpen, initialData }: FarmerFormProps) => {
-  const [createFarmerHandler, { isLoading: isCreating }] =
-    useCreateFarmerMutation();
-  const [updateFarmerHandler, { isLoading: isUpdating }] =
-    useUpdateFarmerMutation();
+const CategoryForm = ({ setDialogOpen, initialData }: CategoryFormProps) => {
+  const [createCategoryHandler, { isLoading: isCreating }] =
+    useCreateCategoryMutation();
+  const [updateCategoryHandler, { isLoading: isUpdating }] =
+    useUpdateCategoryMutation();
 
-  const isEdit = Boolean(initialData?.farmerId);
+  const isEdit = Boolean(initialData?.categoryId);
 
-  const form = useForm<z.infer<typeof createFarmerSchema>>({
-    resolver: zodResolver(createFarmerSchema),
+  const form = useForm<z.infer<typeof createCategorySchema>>({
+    resolver: zodResolver(createCategorySchema),
     defaultValues: initialData || {
       name: "",
-      farmName: "",
-      address: "",
-      contactInfo: "",
+      description: "",
+      image: undefined,
     },
+    mode: "onChange",
   });
 
-  async function onSubmit(formData: z.infer<typeof createFarmerSchema>) {
+  async function onSubmit(formData: z.infer<typeof createCategorySchema>) {
+    console.log("FORMDATA:", formData);
     try {
       let response;
-      if (isEdit && initialData?.farmerId) {
-        response = await updateFarmerHandler({
-          farmerId: initialData.farmerId,
+      if (isEdit && initialData?.categoryId) {
+        response = await updateCategoryHandler({
+          categoryId: initialData.categoryId,
           bodyData: formData,
         }).unwrap();
       } else {
-        response = await createFarmerHandler(formData).unwrap();
+        // response = await createCategoryHandler(formData).unwrap();
       }
 
       if (response.success) {
         toast.success(
-          response?.message || (isEdit ? "Farmer updated." : "Farmer created.")
+          response?.message ||
+            (isEdit ? "Category updated." : "Category created.")
         );
         form.reset();
         setDialogOpen(false);
@@ -72,27 +76,24 @@ const FarmerForm = ({ setDialogOpen, initialData }: FarmerFormProps) => {
           control={form.control}
           name="name"
           label="Name"
-          placeholder="John Smith"
+          placeholder="Vegetables"
         />
-        <InputField
-          control={form.control}
-          name="farmName"
-          label="Farm Name"
-          placeholder="Green Valley Farm"
-        />
+
         <FormTextarea
           control={form.control}
-          name="address"
-          label="Address"
-          placeholder="123 Rural Road, Farmington, CA 95230"
+          name="description"
+          label="Description"
+          placeholder="Fresh vegetables from local farms"
           rows={20}
           inputClassName="min-h-[100px] py-3 resize-none"
         />
-        <InputField
+
+        <FileField
           control={form.control}
-          name="contactInfo"
-          label="Contact Info"
-          placeholder="+8801XXXXXXXXX"
+          name="image"
+          maxFiles={1}
+          maxSize={1}
+          multiple={false}
         />
 
         <div className="flex items-center w-full sm:justify-end gap-2">
@@ -107,7 +108,7 @@ const FarmerForm = ({ setDialogOpen, initialData }: FarmerFormProps) => {
             </Button>
           </DialogClose>
           <FormSubmitBtn
-            text={isEdit ? "Update Farmer" : "Create Farmer"}
+            text={isEdit ? "Update Category" : "Create Category"}
             isLoading={isCreating || isUpdating}
             className="sm:w-fit w-1/2 min-w-[120px] h-10"
             spinnerSize={23}
@@ -118,4 +119,4 @@ const FarmerForm = ({ setDialogOpen, initialData }: FarmerFormProps) => {
   );
 };
 
-export default FarmerForm;
+export default CategoryForm;

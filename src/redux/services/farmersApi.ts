@@ -1,8 +1,8 @@
 import { baseQuery } from "@/redux/services/baseApi";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
-export const farmerApi = createApi({
-  reducerPath: "farmerApi",
+export const farmersApi = createApi({
+  reducerPath: "farmersApi",
   baseQuery,
   tagTypes: ["FARMER"],
   endpoints: (builder) => ({
@@ -64,4 +64,4 @@ export const {
   useGetAllFarmersQuery,
   useUpdateFarmerMutation,
   useDeleteFarmerMutation,
-} = farmerApi;
+} = farmersApi;

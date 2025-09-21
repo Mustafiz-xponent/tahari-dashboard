@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetAllFarmersQuery } from "@/redux/services/farmerApi";
+import { useGetAllFarmersQuery } from "@/redux/services/farmersApi";
 import { DataTablePagination } from "@/components/common/DataTablePagination";
 import { Columns } from "@/app/(dashboard)/farmers/_components/Columns";
 import { useSearchParams } from "next/navigation";
