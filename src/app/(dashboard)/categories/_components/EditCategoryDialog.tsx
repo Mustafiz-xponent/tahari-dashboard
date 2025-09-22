@@ -35,15 +35,7 @@ const EditCategoryDialog = ({ category }: { category: Category }) => {
             Update the category profile information.
           </DialogDescription>
         </DialogHeader>
-        <CategoryForm
-          setDialogOpen={setDialogOpen}
-          initialData={{
-            categoryId: category?.categoryId,
-            name: category?.name,
-            description: category?.description,
-            image: category?.image,
-          }}
-        />
+        <CategoryForm setDialogOpen={setDialogOpen} initialData={category} />
       </DialogContent>
     </Dialog>
   );

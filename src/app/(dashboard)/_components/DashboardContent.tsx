@@ -87,7 +87,7 @@ const DashboardContent = () => {
             </p>
           </CardHeader>
           <CardContent className="p-0 space-y-4 min-h-72 h-full relative">
-            {summaryData?.data?.lowStockProducts?.length > 0 &&
+            {summaryData?.data?.lowStockProducts?.length > 0 ? (
               summaryData?.data?.lowStockProducts?.map(
                 (product: LowStockProduct, index: number) => (
                   <div
@@ -109,8 +109,8 @@ const DashboardContent = () => {
                     </p>
                   </div>
                 )
-              )}
-            {summaryData?.data?.lowStockProducts?.length === 0 && (
+              )
+            ) : (
               <div
                 className="absolute flex items-center justify-center flex-col space-y-4
                top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/3"

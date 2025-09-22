@@ -5,7 +5,10 @@ import { toast } from "sonner";
 import { IApiError } from "@/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFarmerSchema } from "@/lib/validations/farmerSchema";
+import {
+  createFarmerSchema,
+  editFarmerSchema,
+} from "@/lib/validations/farmerSchema";
 import { Form } from "@/components/ui/form";
 import { InputField } from "@/components/common/InputField";
 import FormSubmitBtn from "@/components/common/FormSubmitBtn";
@@ -16,10 +19,11 @@ import {
   useCreateFarmerMutation,
   useUpdateFarmerMutation,
 } from "@/redux/services/farmersApi";
+import { Farmer } from "@/types/farmer";
 
 interface FarmerFormProps {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  initialData?: z.infer<typeof createFarmerSchema> & { farmerId?: string }; // allow id for edit mode
+  initialData?: Farmer;
 }
 
 const FarmerForm = ({ setDialogOpen, initialData }: FarmerFormProps) => {
@@ -29,9 +33,10 @@ const FarmerForm = ({ setDialogOpen, initialData }: FarmerFormProps) => {
     useUpdateFarmerMutation();
 
   const isEdit = Boolean(initialData?.farmerId);
+  const formSchema = isEdit ? editFarmerSchema : createFarmerSchema;
 
-  const form = useForm<z.infer<typeof createFarmerSchema>>({
-    resolver: zodResolver(createFarmerSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: "",
       farmName: "",
@@ -40,7 +45,7 @@ const FarmerForm = ({ setDialogOpen, initialData }: FarmerFormProps) => {
     },
   });
 
-  async function onSubmit(formData: z.infer<typeof createFarmerSchema>) {
+  async function onSubmit(formData: z.infer<typeof formSchema>) {
     try {
       let response;
       if (isEdit && initialData?.farmerId) {

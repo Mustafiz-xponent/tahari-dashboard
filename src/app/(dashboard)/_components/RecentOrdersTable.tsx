@@ -87,7 +87,7 @@ const RecentOrdersTable = ({ orders }: { orders: RecentOrders[] }) => {
           </TableRow>
         </TableHeader>
         <TableBody className="font-secondary">
-          {orders?.length > 0 &&
+          {orders?.length > 0 ? (
             orders?.map((order: RecentOrders, index: number) => (
               <TableRow key={index}>
                 <TableCell className="py-4">{order?.orderId}</TableCell>
@@ -121,12 +121,11 @@ const RecentOrdersTable = ({ orders }: { orders: RecentOrders[] }) => {
                   {order?.totalAmount}
                 </TableCell>
               </TableRow>
-            ))}
-          {/* No recent orders */}
-          {orders?.length === 0 && (
-            <TableRow>
+            ))
+          ) : (
+            <TableRow className="h-80">
               <TableCell
-                colSpan={6}
+                colSpan={7}
                 className="py-4 text-typography-50 text-base font-secondary text-center"
               >
                 No recent orders

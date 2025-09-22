@@ -10,6 +10,7 @@ export const farmersApi = createApi({
       query: (bodyData) => ({
         url: "/api/farmers",
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bodyData),
       }),
       invalidatesTags: ["FARMER"],
@@ -43,6 +44,7 @@ export const farmersApi = createApi({
       query: ({ farmerId, bodyData }) => ({
         url: `/api/farmers/${farmerId}`,
         method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bodyData),
       }),
       invalidatesTags: ["FARMER"],

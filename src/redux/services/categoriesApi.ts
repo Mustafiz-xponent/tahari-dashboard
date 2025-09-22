@@ -7,10 +7,10 @@ export const categoriesApi = createApi({
   tagTypes: ["CATEGORY"],
   endpoints: (builder) => ({
     createCategory: builder.mutation({
-      query: (bodyData) => ({
+      query: (formData: FormData) => ({
         url: "/api/categories",
         method: "POST",
-        body: JSON.stringify(bodyData),
+        body: formData,
       }),
       invalidatesTags: ["CATEGORY"],
     }),
@@ -40,10 +40,10 @@ export const categoriesApi = createApi({
     }),
 
     updateCategory: builder.mutation({
-      query: ({ categoryId, bodyData }) => ({
+      query: ({ categoryId, formData }) => ({
         url: `/api/categories/${categoryId}`,
         method: "PUT",
-        body: JSON.stringify(bodyData),
+        body: formData,
       }),
       invalidatesTags: ["CATEGORY"],
     }),

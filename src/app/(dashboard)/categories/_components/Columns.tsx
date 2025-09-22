@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
 import { ColumnDef } from "@tanstack/react-table";
 import TableAction from "@/app/(dashboard)/categories/_components/TableAction";
+import CategoryImage from "@/app/(dashboard)/categories/_components/CategoryImage";
 
 export const Columns: ColumnDef<Category>[] = [
   {
@@ -18,21 +18,16 @@ export const Columns: ColumnDef<Category>[] = [
     accessorKey: "accessibleImageUrl",
     header: "Image",
     cell: ({ row }) => (
-      <div className="capitalize font-secondary">
-        <Image
-          src={row.getValue("accessibleImageUrl") ?? ""}
-          width={50}
-          height={50}
-          alt={row.getValue("name") + " Image"}
-          className="rounded-sm object-cover"
-        />
-      </div>
+      <CategoryImage
+        name={row.getValue("name")}
+        image={row.getValue("accessibleImageUrl")}
+      />
     ),
   },
   {
     accessorKey: "name",
     header: ({}) => {
-      return <div className="font-secondary">Category Name</div>;
+      return <div className="font-secondary">Name</div>;
     },
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },

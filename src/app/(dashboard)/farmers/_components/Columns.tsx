@@ -7,7 +7,6 @@ export const Columns: ColumnDef<Farmer>[] = [
   {
     accessorKey: "farmerId",
     header: "ID",
-    size: 40,
     cell: ({ row }) => (
       <div className="capitalize font-secondary px-4">
         {row.getValue("farmerId")}

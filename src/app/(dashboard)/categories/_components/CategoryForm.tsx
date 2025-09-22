@@ -15,12 +15,17 @@ import {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
 } from "@/redux/services/categoriesApi";
-import { createCategorySchema } from "@/lib/validations/categorySchema";
+import {
+  createCategorySchema,
+  updateCategorySchema,
+} from "@/lib/validations/categorySchema";
 import { FileField } from "@/components/common/FileField";
+import CategoryImage from "./CategoryImage";
+import { Category } from "@/types/category";
 
 interface CategoryFormProps {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  initialData?: z.infer<typeof createCategorySchema> & { categoryId?: string }; // allow id for edit mode
+  initialData?: Category;
 }
 
 const CategoryForm = ({ setDialogOpen, initialData }: CategoryFormProps) => {
@@ -29,10 +34,13 @@ const CategoryForm = ({ setDialogOpen, initialData }: CategoryFormProps) => {
   const [updateCategoryHandler, { isLoading: isUpdating }] =
     useUpdateCategoryMutation();
 
-  const isEdit = Boolean(initialData?.categoryId);
+  const categoryId = initialData?.categoryId;
+  const mode = categoryId ? "EDIT" : "CREATE";
+  const formSchema =
+    mode === "EDIT" ? updateCategorySchema : createCategorySchema;
 
-  const form = useForm<z.infer<typeof createCategorySchema>>({
-    resolver: zodResolver(createCategorySchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: "",
       description: "",
@@ -41,14 +49,18 @@ const CategoryForm = ({ setDialogOpen, initialData }: CategoryFormProps) => {
     mode: "onChange",
   });
 
-  async function onSubmit(formData: z.infer<typeof createCategorySchema>) {
-    console.log("FORMDATA:", formData);
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    const formData = new FormData();
+    formData.append("image", data.image);
+    formData.append("name", data?.name ?? "");
+    formData.append("description", data?.description ?? "");
+
     try {
       let response;
-      if (isEdit && initialData?.categoryId) {
+      if (mode === "EDIT" && categoryId) {
         response = await updateCategoryHandler({
-          categoryId: initialData.categoryId,
-          bodyData: formData,
+          categoryId,
+          formData: formData,
         }).unwrap();
       } else {
         response = await createCategoryHandler(formData).unwrap();
@@ -57,7 +69,7 @@ const CategoryForm = ({ setDialogOpen, initialData }: CategoryFormProps) => {
       if (response.success) {
         toast.success(
           response?.message ||
-            (isEdit ? "Category updated." : "Category created.")
+            (mode === "EDIT" ? "Category updated." : "Category created.")
         );
         form.reset();
         setDialogOpen(false);
@@ -94,6 +106,13 @@ const CategoryForm = ({ setDialogOpen, initialData }: CategoryFormProps) => {
           maxSize={1}
           multiple={false}
         />
+        {mode === "EDIT" && initialData && !form.watch("image") && (
+          <CategoryImage
+            name={initialData.name}
+            image={initialData.accessibleImageUrl!}
+            className="w-24 h-24"
+          />
+        )}
 
         <div className="flex items-center w-full sm:justify-end gap-2">
           <DialogClose asChild>
@@ -107,7 +126,7 @@ const CategoryForm = ({ setDialogOpen, initialData }: CategoryFormProps) => {
             </Button>
           </DialogClose>
           <FormSubmitBtn
-            text={isEdit ? "Update Category" : "Create Category"}
+            text={mode === "EDIT" ? "Update Category" : "Create Category"}
             isLoading={isCreating || isUpdating}
             className="sm:w-fit w-1/2 min-w-[120px] h-10"
             spinnerSize={23}

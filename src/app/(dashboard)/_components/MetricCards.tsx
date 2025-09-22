@@ -7,7 +7,7 @@ const MetricCards = ({ data }: { data: MetricsData }) => {
   const metricsData = [
     {
       title: "Total Revenue",
-      value: data?.revenue?.totalRevenue,
+      value: data?.revenue?.totalRevenue ?? 0,
       valueType: "CURRENCY",
       changeLabel: data?.revenue?.changeLabel,
       change: data?.revenue?.changePercentage,
@@ -15,7 +15,7 @@ const MetricCards = ({ data }: { data: MetricsData }) => {
     },
     {
       title: "Total Orders",
-      value: data?.order?.totalOrders,
+      value: data?.order?.totalOrders ?? 0,
       valueType: "NUMBER",
       changeLabel: data?.order?.changeLabel,
       change: data?.order?.changePercentage,
@@ -23,7 +23,7 @@ const MetricCards = ({ data }: { data: MetricsData }) => {
     },
     {
       title: "Active Subscriptions",
-      value: data?.subscription?.totalActiveSubscriptions,
+      value: data?.subscription?.totalActiveSubscriptions ?? 0,
       valueType: "NUMBER",
       changeLabel: data?.subscription?.changeLabel,
       change: data?.subscription?.changePercentage,
@@ -31,7 +31,7 @@ const MetricCards = ({ data }: { data: MetricsData }) => {
     },
     {
       title: "Total Products",
-      value: data?.product?.totalProducts,
+      value: data?.product?.totalProducts ?? 0,
       valueType: "NUMBER",
       changeLabel: data?.product?.changeLabel,
       change: data?.product?.changePercentage,

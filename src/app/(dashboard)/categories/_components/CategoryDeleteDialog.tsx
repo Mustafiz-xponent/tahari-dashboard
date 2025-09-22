@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Trash } from "lucide-react";
+import { Trash, TriangleAlert } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -46,8 +46,9 @@ const CategoryDeleteDialog = ({ categoryId }: { categoryId: string }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl rounded-sm  max-h-[90vh] no-scrollbar overflow-y-scroll">
         <DialogHeader className="text-start mt-2">
-          <DialogTitle className="font-secondary text-xl capitalize">
-            Are you sure you want to delete this category?
+          <DialogTitle className="font-secondary flex gap-x-2 text-xl capitalize">
+            <TriangleAlert className="text-red-500" /> Are you sure you want to
+            delete this category?
           </DialogTitle>
           <DialogDescription className="font-secondary text-sm leading-6 text-typography-50">
             This action is irreversible. Deleting this category will permanently{" "}

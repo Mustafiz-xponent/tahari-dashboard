@@ -6,11 +6,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Category } from "@/types/category";
-import CategoryDetailsDialog from "@/app/(dashboard)/categories/_components/CategoryDetailsDialog";
 import EditCategoryDialog from "@/app/(dashboard)/categories/_components/EditCategoryDialog";
 import CategoryDeleteDialog from "@/app/(dashboard)/categories/_components/CategoryDeleteDialog";
 
@@ -29,10 +27,7 @@ const TableAction = ({ data }: { data: Category }) => {
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem asChild>
-          <CategoryDetailsDialog data={data} />
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
+
         <DropdownMenuItem asChild>
           <EditCategoryDialog category={data} />
         </DropdownMenuItem>

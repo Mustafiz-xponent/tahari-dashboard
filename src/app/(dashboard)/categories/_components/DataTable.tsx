@@ -64,14 +64,14 @@ export function DataTable() {
             withViewOptions={false}
           />
         ) : (
-          <Table>
+          <Table className="w-full ">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="py-3.5 font-secondary text-typography-50 first:px-5"
+                      className="py-3.5  font-secondary text-typography-50 first:px-5"
                     >
                       {flexRender(
                         header.column.columnDef.header,
@@ -87,7 +87,7 @@ export function DataTable() {
                 table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id}>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="py-4  font-secondary">
+                      <TableCell key={cell.id} className="py-2  font-secondary">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
