@@ -22,6 +22,7 @@ import {
   MessagesSquare,
   BadgePercent,
   ChartColumnIncreasing,
+  DollarSign,
 } from "lucide-react";
 import { UserRole } from "@/types/user";
 const navItems = [
@@ -78,6 +79,12 @@ const navItems = [
     url: "/messaging",
     icon: MessagesSquare,
     allowedRoles: [UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.SUPPORT],
+  },
+  {
+    title: "Farmer Transactions",
+    url: "/farmers-transaction",
+    icon: DollarSign,
+    allowedRoles: [UserRole.ADMIN, UserRole.SUPER_ADMIN],
   },
   {
     title: "Customers",

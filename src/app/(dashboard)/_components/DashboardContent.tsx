@@ -9,7 +9,6 @@ import {
 } from "@/redux/services/dashboardApi";
 import { generateYearList } from "@/lib";
 import { LowStockProduct } from "@/types/dashbord";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { ChartNoAxesCombined } from "lucide-react";
 import {
   Select,
@@ -20,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import RecentOrdersTable from "./RecentOrdersTable";
 import MetricCards from "./MetricCards";
+import DashboardSkeleton from "@/app/(dashboard)/_components/DashboardSkeleton";
 
 const DashboardContent = () => {
   const currentYear = new Date().getFullYear().toString();
@@ -32,8 +32,8 @@ const DashboardContent = () => {
   const maxYear = salesOverviewData?.meta?.yearRange?.max;
   const yearOptions = generateYearList(minYear, maxYear);
 
-  if (isLoading)
-    return <LoadingSpinner height="50vh" size={50} color="#59b77d" />;
+  if (isLoading) return <DashboardSkeleton />;
+
   return (
     <div className="space-y-6">
       {/* Metric Cards */}

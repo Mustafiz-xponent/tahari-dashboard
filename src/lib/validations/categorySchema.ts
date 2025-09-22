@@ -18,11 +18,14 @@ export const updateCategorySchema = z.object({
   description: z.string().optional(),
   image: z
     .any()
-    .refine((file) => file instanceof File, "Please upload one file")
+    .optional()
+    .refine((file) => !file || file instanceof File, "Please upload one file")
     .refine(
-      (file) => file?.type?.startsWith("image/"),
+      (file) => !file || file?.type?.startsWith("image/"),
       "Only image files are allowed"
     )
-    .refine((file) => file?.size <= 1 * 1024 * 1024, "Max file size is 1MB")
-    .optional(),
+    .refine(
+      (file) => !file || file?.size <= 1 * 1024 * 1024,
+      "Max file size is 1MB"
+    ),
 });
