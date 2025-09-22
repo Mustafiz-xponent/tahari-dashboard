@@ -1,8 +1,7 @@
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import BarChartSkeleton from "@/components/common/BarChartSkeleton";
 import { DataTableSkeleton } from "@/components/common/DataTableSkeleton";
-
-import BarChartSkeleton from "./BarChartSkeleton";
 
 const DashboardSkeleton = () => {
   return (
