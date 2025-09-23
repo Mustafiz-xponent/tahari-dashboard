@@ -20,7 +20,7 @@ import {
   updateCategorySchema,
 } from "@/lib/validations/categorySchema";
 import { FileField } from "@/components/common/FileField";
-import CategoryImage from "./CategoryImage";
+import CategoryImage from "@/app/(dashboard)/categories/_components/CategoryImage";
 import { Category } from "@/types/category";
 
 interface CategoryFormProps {

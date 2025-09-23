@@ -8,6 +8,8 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import { PersistConfig, persistReducer, persistStore } from "redux-persist";
 
+import { productsApi } from "./services/productsApi";
+
 // Fallback no-op storage for non-browser environments
 const createNoopStorage = () => {
   return {
@@ -35,6 +37,7 @@ const rootReducer = combineReducers({
   [dashboardApi.reducerPath]: dashboardApi.reducer,
   [farmersApi.reducerPath]: farmersApi.reducer,
   [categoriesApi.reducerPath]: categoriesApi.reducer,
+  [productsApi.reducerPath]: productsApi.reducer,
 });
 
 // Define the persist config type
@@ -54,7 +57,8 @@ const store = configureStore({
       authApi.middleware,
       dashboardApi.middleware,
       farmersApi.middleware,
-      categoriesApi.middleware
+      categoriesApi.middleware,
+      productsApi.middleware
     ),
 });
 

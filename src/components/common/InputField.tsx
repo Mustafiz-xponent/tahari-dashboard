@@ -49,6 +49,7 @@ export function InputField<TFieldValues extends FieldValues>({
               id={name}
               placeholder={placeholder}
               type={type}
+              onWheel={(e) => e.currentTarget.blur()}
               {...field}
               className={twMerge(
                 `pl-4 h-11 border-border placeholder:text-sm text-sm font-secondary focus-visible:border-border focus-visible:ring-0 transition-smooth`,
