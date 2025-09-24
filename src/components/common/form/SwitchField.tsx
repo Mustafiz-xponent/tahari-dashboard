@@ -66,7 +66,6 @@ export function SwitchField<TFieldValues extends FieldValues>({
               </FormDescription>
             )}
           </div>
-
           <FormControl>
             <Switch
               checked={field.value}
@@ -74,7 +73,6 @@ export function SwitchField<TFieldValues extends FieldValues>({
               className="data-[state=checked]:bg-brand-100"
             />
           </FormControl>
-
           <FormMessage />
         </FormItem>
       )}

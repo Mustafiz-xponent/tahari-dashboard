@@ -31,7 +31,7 @@ import {
   setOtpResendCooldown,
 } from "@/redux/slices/userSlice";
 import { useEffect } from "react";
-import FormSubmitBtn from "@/components/common/FormSubmitBtn";
+import FormSubmitBtn from "@/components/common/form/FormSubmitBtn";
 
 const ForgotPasswordForm = () => {
   const [forgotPasswordHandler, { isLoading }] = useForgotPasswordMutation();

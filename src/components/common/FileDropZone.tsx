@@ -11,7 +11,7 @@ import {
   FileUploadItemDelete,
   FileUploadItemMetadata,
   FileUploadItemPreview,
-  FileUploadItemProgress,
+  // FileUploadItemProgress,
   FileUploadList,
   FileUploadTrigger,
 } from "@/components/ui/file-upload";
@@ -140,7 +140,9 @@ export function FileDropZone<TFieldValues extends FieldValues>({
                 <FileUploadItem key={index} value={file} className="p-1">
                   <FileUploadItemPreview
                     className={`${
-                      orientation === "vertical" ? "size-20" : "size-48"
+                      orientation === "vertical"
+                        ? "size-20"
+                        : "size-24 sm:size-48"
                     }  [&>svg]:size-12`}
                   >
                     {/* <FileUploadItemProgress variant="circular" size={40} /> */}

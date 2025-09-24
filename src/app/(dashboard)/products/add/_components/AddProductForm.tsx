@@ -6,35 +6,45 @@ import { IApiError } from "@/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
-import FormSubmitBtn from "@/components/common/FormSubmitBtn";
+import FormSubmitBtn from "@/components/common/form/FormSubmitBtn";
 import { useCreateProductMutation } from "@/redux/services/productsApi";
 import { createProductSchema } from "@/lib/validations/productSchema";
 import { ProductUnitType } from "@/types/product";
-import { InputField } from "@/components/common/InputField";
-import { FormTextarea } from "@/components/common/FormTextArea";
-import { SelectField } from "@/components/common/SelectField";
-import { SwitchField } from "@/components/common/SwitchField";
-import { DatePickerField } from "@/components/common/DatePickerField";
-import { FileField } from "@/components/common/FileField";
+import { InputField } from "@/components/common/form/InputField";
+import { SelectField } from "@/components/common/form/SelectField";
+import { SwitchField } from "@/components/common/form/SwitchField";
+import { DatePickerField } from "@/components/common/form/DatePickerField";
+import { TextAreaField } from "@/components/common/form/TextAreaField";
+import { FileField } from "@/components/common/form/FileField";
+import { useGetAllCategoriesQuery } from "@/redux/services/categoriesApi";
+import { useGetAllFarmersQuery } from "@/redux/services/farmersApi";
+import { Category } from "@/types/category";
+import { Farmer } from "@/types/farmer";
 
 const AddProductForm = () => {
   const [addProductHandler, { isLoading }] = useCreateProductMutation();
+  const { data: categoryData, isLoading: categoryLoading } =
+    useGetAllCategoriesQuery({ limit: 100 });
+  const { data: farmerData, isLoading: farmerLoading } = useGetAllFarmersQuery({
+    limit: 100,
+  });
+  console.log(categoryData);
 
   const form = useForm<z.infer<typeof createProductSchema>>({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
       name: "",
       description: "",
-      unitType: ProductUnitType.KG as keyof typeof ProductUnitType,
-      unitPrice: undefined,
-      packageSize: undefined,
-      stockQuantity: undefined,
-      reorderLevel: undefined,
+      unitType: undefined,
+      unitPrice: "",
+      packageSize: "",
+      stockQuantity: "",
+      reorderLevel: "",
       isSubscription: false,
       isPreorder: false,
       preorderAvailabilityDate: undefined,
-      categoryId: 0,
-      farmerId: 0,
+      categoryId: "",
+      farmerId: "",
       images: [] as File[],
     },
     mode: "onChange",
@@ -55,12 +65,50 @@ const AddProductForm = () => {
       toast.error(error?.data?.error?.message || "Something went wrong.");
     }
   }
+  const productUnitTypeOptions = Object.values(ProductUnitType).map((unit) => ({
+    label: unit,
+    value: unit,
+  }));
+  const categoryOptions = categoryData?.data?.map((cat: Category) => ({
+    label: cat?.name,
+    value: cat?.categoryId,
+  }));
+  const farmerOptions = farmerData?.data?.map((farmer: Farmer) => ({
+    label: farmer?.name,
+    value: farmer?.farmerId,
+  }));
+
+  const isPreorder = form.watch("isPreorder");
+  const isSubscription = form.watch("isSubscription");
+
+  React.useEffect(() => {
+    if (isPreorder) {
+      // Ensure subscription is turned off
+      form.setValue("isSubscription", false, { shouldValidate: true });
+    } else {
+      // Clear preorder date when preorder is off
+      form.setValue("preorderAvailabilityDate", undefined, {
+        shouldValidate: true,
+      });
+    }
+  }, [isPreorder, form]);
+
+  React.useEffect(() => {
+    if (isSubscription) {
+      // Ensure preorder is turned off
+      form.setValue("isPreorder", false, { shouldValidate: true });
+      // Reset preorder date since it's no longer valid
+      form.setValue("preorderAvailabilityDate", undefined, {
+        shouldValidate: true,
+      });
+    }
+  }, [isSubscription, form]);
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className=" grid grid-cols-2 gap-4"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-4"
       >
         <div className="bg-white p-4 rounded-md space-y-6">
           <InputField
@@ -69,7 +117,7 @@ const AddProductForm = () => {
             label="Name"
             placeholder="Tomato"
           />
-          <FormTextarea
+          <TextAreaField
             control={form.control}
             name="description"
             label="Description"
@@ -84,12 +132,8 @@ const AddProductForm = () => {
               label="Category"
               placeholder="Select a Category"
               inputClassName="w-full h-11"
-              isDataLoading={false}
-              options={[
-                { label: "English", value: "en" },
-                { label: "Bengali", value: "bn" },
-                { label: "Spanish", value: "es" },
-              ]}
+              isDataLoading={categoryLoading}
+              options={categoryOptions}
             />
             <SelectField
               control={form.control}
@@ -97,36 +141,28 @@ const AddProductForm = () => {
               label="Farmer"
               placeholder="Select a Farmer"
               inputClassName="w-full h-11"
-              isDataLoading={false}
-              options={[
-                { label: "English", value: "en" },
-                { label: "Bengali", value: "bn" },
-                { label: "Spanish", value: "es" },
-              ]}
+              isDataLoading={farmerLoading}
+              options={farmerOptions}
             />
           </div>
           <div className="grid grid-cols-1 items-start sm:grid-cols-2 gap-4">
             <SelectField
               control={form.control}
-              name="farmerId"
+              name="unitType"
               label="Unit Type"
               placeholder="Select a unit"
               inputClassName="w-full h-11"
               isDataLoading={false}
               info={`The measurement for this product (kg, gm, pcs, etc.).
                Example: kg → all other values are based on kilograms.`}
-              options={[
-                { label: "English", value: "en" },
-                { label: "Bengali", value: "bn" },
-                { label: "Spanish", value: "es" },
-              ]}
+              options={productUnitTypeOptions}
             />
             <InputField
               control={form.control}
               name="unitPrice"
               type="number"
               label="Unit Price"
-              placeholder="1kg"
+              placeholder="10৳"
               info={`Price of 1 unit of the product.
               Example: 10 means 10৳ per kg`}
               inputClassName="w-full flex-1"
@@ -138,7 +174,7 @@ const AddProductForm = () => {
               name="packageSize"
               type="number"
               label="Package Size"
-              placeholder="1kg"
+              placeholder="10kg"
               info={`How many units are sold together in one package.
               Example: 2 → one package = 2 kg, price = 2 × 10৳ = 20৳.`}
             />
@@ -175,7 +211,7 @@ const AddProductForm = () => {
             description="Allow customers to order before the product is available."
             info="Useful for products launching soon. Customers will pay now and receive the item later."
           />
-          {form.watch("isPreorder") && (
+          {isPreorder && (
             <DatePickerField
               control={form.control}
               name="preorderAvailabilityDate"
@@ -198,7 +234,7 @@ const AddProductForm = () => {
           <FormSubmitBtn
             text={"Add Product"}
             isLoading={isLoading}
-            className="sm:w-fit w-1/2 min-w-[120px] h-10 mt-6 float-right"
+            className="sm:w-fit w-1/2 min-w-[200px] h-12 mt-6 float-right"
             spinnerSize={23}
           />
         </div>

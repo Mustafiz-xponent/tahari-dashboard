@@ -9,7 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { FileDropZone } from "./FileDropZone";
+import { FileDropZone } from "@/components/common/FileDropZone";
 
 interface FileFieldProps<TFieldValues extends FieldValues> {
   control: Control<TFieldValues>;

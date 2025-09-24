@@ -11,7 +11,7 @@ import {
 import { Control, FieldPath, FieldValues } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
-interface FormTextareaProps<TFieldValues extends FieldValues> {
+interface TextAreaFieldProps<TFieldValues extends FieldValues> {
   control: Control<TFieldValues>;
   name: FieldPath<TFieldValues>;
   label: string;
@@ -21,7 +21,7 @@ interface FormTextareaProps<TFieldValues extends FieldValues> {
   inputClassName?: string;
 }
 
-export function FormTextarea<TFieldValues extends FieldValues>({
+export function TextAreaField<TFieldValues extends FieldValues>({
   control,
   name,
   label,
@@ -29,7 +29,7 @@ export function FormTextarea<TFieldValues extends FieldValues>({
   rows = 4,
   labelClassName,
   inputClassName,
-}: FormTextareaProps<TFieldValues>) {
+}: TextAreaFieldProps<TFieldValues>) {
   return (
     <FormField
       control={control}

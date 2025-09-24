@@ -10,9 +10,8 @@ import {
   editFarmerSchema,
 } from "@/lib/validations/farmerSchema";
 import { Form } from "@/components/ui/form";
-import { InputField } from "@/components/common/InputField";
-import FormSubmitBtn from "@/components/common/FormSubmitBtn";
-import { FormTextarea } from "@/components/common/FormTextArea";
+import { InputField } from "@/components/common/form/InputField";
+import FormSubmitBtn from "@/components/common/form/FormSubmitBtn";
 import { DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +19,7 @@ import {
   useUpdateFarmerMutation,
 } from "@/redux/services/farmersApi";
 import { Farmer } from "@/types/farmer";
+import { TextAreaField } from "@/components/common/form/TextAreaField";
 
 interface FarmerFormProps {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -85,7 +85,7 @@ const FarmerForm = ({ setDialogOpen, initialData }: FarmerFormProps) => {
           label="Farm Name"
           placeholder="Green Valley Farm"
         />
-        <FormTextarea
+        <TextAreaField
           control={form.control}
           name="address"
           label="Address"

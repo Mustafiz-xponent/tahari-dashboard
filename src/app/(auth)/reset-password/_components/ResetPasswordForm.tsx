@@ -45,7 +45,7 @@ import BarStepper from "@/app/(auth)/reset-password/_components/BarStepper";
 import ResendCodeBtn from "./ResendCodeBtn";
 import { useAppDispatch } from "@/redux/hooks";
 import { clearForgotPasswordPhone } from "@/redux/slices/userSlice";
-import FormSubmitBtn from "@/components/common/FormSubmitBtn";
+import FormSubmitBtn from "@/components/common/form/FormSubmitBtn";
 type Step = 1 | 2 | 3;
 
 const ResetPasswordForm = () => {

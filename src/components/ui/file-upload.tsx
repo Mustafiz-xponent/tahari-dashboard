@@ -804,7 +804,7 @@ function FileUploadDropzone(props: FileUploadDropzoneProps) {
 
   return (
     <DropzonePrimitive
-      role="region"
+      role="button"
       id={context.dropzoneId}
       aria-controls={`${context.inputId} ${context.listId}`}
       aria-disabled={context.disabled}

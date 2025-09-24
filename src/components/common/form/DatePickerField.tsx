@@ -76,6 +76,8 @@ export function DatePickerField<TFieldValues extends FieldValues>({
                     return true;
                   return false;
                 }}
+                startMonth={new Date(2020, 0)}
+                endMonth={new Date(new Date().getFullYear() + 6, 11)}
                 captionLayout="dropdown"
               />
             </PopoverContent>

@@ -28,7 +28,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { IApiError } from "@/types";
 import { toast } from "sonner";
 import Link from "next/link";
-import FormSubmitBtn from "@/components/common/FormSubmitBtn";
+import FormSubmitBtn from "@/components/common/form/FormSubmitBtn";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState<boolean>(false);

@@ -116,10 +116,10 @@ export function SelectField<TFieldValues extends FieldValues>({
                       {isDataLoading ? "Loading..." : "No results found."}
                     </CommandEmpty>
                     <CommandGroup>
-                      {options.map((opt) => (
+                      {options?.map((opt) => (
                         <CommandItem
                           key={opt.value}
-                          value={opt.value}
+                          value={opt.label}
                           onSelect={() => field.onChange(opt.value)}
                           className="font-secondary"
                         >

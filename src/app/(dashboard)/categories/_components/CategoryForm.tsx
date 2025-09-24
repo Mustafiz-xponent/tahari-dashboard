@@ -6,9 +6,8 @@ import { IApiError } from "@/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
-import { InputField } from "@/components/common/InputField";
-import FormSubmitBtn from "@/components/common/FormSubmitBtn";
-import { FormTextarea } from "@/components/common/FormTextArea";
+import { InputField } from "@/components/common/form/InputField";
+import FormSubmitBtn from "@/components/common/form/FormSubmitBtn";
 import { DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,9 +18,10 @@ import {
   createCategorySchema,
   updateCategorySchema,
 } from "@/lib/validations/categorySchema";
-import { FileField } from "@/components/common/FileField";
 import CategoryImage from "@/app/(dashboard)/categories/_components/CategoryImage";
 import { Category } from "@/types/category";
+import { TextAreaField } from "@/components/common/form/TextAreaField";
+import { FileField } from "@/components/common/form/FileField";
 
 interface CategoryFormProps {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -90,7 +90,7 @@ const CategoryForm = ({ setDialogOpen, initialData }: CategoryFormProps) => {
           placeholder="Vegetables"
         />
 
-        <FormTextarea
+        <TextAreaField
           control={form.control}
           name="description"
           label="Description"
