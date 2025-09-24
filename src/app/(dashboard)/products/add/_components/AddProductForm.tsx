@@ -52,10 +52,27 @@ const AddProductForm = () => {
 
   async function onSubmit(data: z.infer<typeof createProductSchema>) {
     const formData = new FormData();
-    console.log(data);
+    Object.entries(data).forEach(([key, value]) => {
+      if (value === undefined || value === null) return;
+
+      if (Array.isArray(value)) {
+        // Append files individually
+        value.forEach(
+          (item: z.infer<typeof createProductSchema>["images"][0]) => {
+            if (item instanceof File) formData.append(key, item, item.name);
+          }
+        );
+      } else if (value instanceof Date) {
+        formData.append(key, value.toISOString());
+      } else if (typeof value === "boolean") {
+        formData.append(key, String(value));
+      } else {
+        formData.append(key, String(value));
+      }
+    });
+
     try {
       const response = await addProductHandler(formData).unwrap();
-
       if (response.success) {
         toast.success(response?.message || "Product added successfully.");
         form.reset();
