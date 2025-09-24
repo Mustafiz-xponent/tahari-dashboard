@@ -50,6 +50,32 @@ const AddProductForm = () => {
     mode: "onChange",
   });
 
+  const isPreorder = form.watch("isPreorder");
+  const isSubscription = form.watch("isSubscription");
+
+  React.useEffect(() => {
+    if (isPreorder) {
+      // Ensure subscription is turned off
+      form.setValue("isSubscription", false, { shouldValidate: true });
+    } else {
+      // Clear preorder date when preorder is off
+      form.setValue("preorderAvailabilityDate", undefined, {
+        shouldValidate: true,
+      });
+    }
+  }, [isPreorder, form]);
+
+  React.useEffect(() => {
+    if (isSubscription) {
+      // Ensure preorder is turned off
+      form.setValue("isPreorder", false, { shouldValidate: true });
+      // Reset preorder date since it's no longer valid
+      form.setValue("preorderAvailabilityDate", undefined, {
+        shouldValidate: true,
+      });
+    }
+  }, [isSubscription, form]);
+
   async function onSubmit(data: z.infer<typeof createProductSchema>) {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
@@ -94,32 +120,6 @@ const AddProductForm = () => {
     label: farmer?.name,
     value: farmer?.farmerId,
   }));
-
-  const isPreorder = form.watch("isPreorder");
-  const isSubscription = form.watch("isSubscription");
-
-  React.useEffect(() => {
-    if (isPreorder) {
-      // Ensure subscription is turned off
-      form.setValue("isSubscription", false, { shouldValidate: true });
-    } else {
-      // Clear preorder date when preorder is off
-      form.setValue("preorderAvailabilityDate", undefined, {
-        shouldValidate: true,
-      });
-    }
-  }, [isPreorder, form]);
-
-  React.useEffect(() => {
-    if (isSubscription) {
-      // Ensure preorder is turned off
-      form.setValue("isPreorder", false, { shouldValidate: true });
-      // Reset preorder date since it's no longer valid
-      form.setValue("preorderAvailabilityDate", undefined, {
-        shouldValidate: true,
-      });
-    }
-  }, [isSubscription, form]);
 
   return (
     <Form {...form}>
@@ -179,7 +179,7 @@ const AddProductForm = () => {
               name="unitPrice"
               type="number"
               label="Unit Price"
-              placeholder="10৳"
+              placeholder="50৳"
               info={`Price of 1 unit of the product.
               Example: 10 means 10৳ per kg`}
               inputClassName="w-full flex-1"
@@ -200,7 +200,7 @@ const AddProductForm = () => {
               name="stockQuantity"
               type="number"
               label="Stock Quantity"
-              placeholder="1kg"
+              placeholder="100kg"
               info={`The current stock you have, in base units.
               Example: 100 → 100 kg available in stock.`}
             />
@@ -233,7 +233,7 @@ const AddProductForm = () => {
               control={form.control}
               name="preorderAvailabilityDate"
               label="Preorder Availability Date"
-              disableFuture={true}
+              disableFuture={false}
               disablePastBefore={new Date("1900-01-01")}
             />
           )}
