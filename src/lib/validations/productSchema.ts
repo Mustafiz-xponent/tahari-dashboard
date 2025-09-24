@@ -7,9 +7,9 @@ export const createProductSchema = z
     description: z.string().optional(), //
     unitType: z.enum(Object.values(ProductUnitType) as [string, ...string[]]), //
     unitPrice: z.number().positive(), //
-    packageSize: z.number().positive(),
-    stockQuantity: z.number().positive(),
-    reorderLevel: z.number().positive().optional(),
+    packageSize: z.number().positive(), //
+    stockQuantity: z.number().positive(), //
+    reorderLevel: z.number().positive().optional(), //
     isSubscription: z.boolean().optional(),
     isPreorder: z.boolean().optional(),
     preorderAvailabilityDate: z.date().optional(),

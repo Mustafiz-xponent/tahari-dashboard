@@ -18,6 +18,7 @@ interface FileFieldProps<TFieldValues extends FieldValues> {
   maxFiles?: number; // max number of files
   maxSize?: number; // in MB
   multiple?: boolean;
+  orientation?: "horizontal" | "vertical";
 }
 
 export function FileField<TFieldValues extends FieldValues>({
@@ -27,6 +28,7 @@ export function FileField<TFieldValues extends FieldValues>({
   maxFiles = 1,
   maxSize = 1,
   multiple = false,
+  orientation = "vertical",
 }: FileFieldProps<TFieldValues>) {
   return (
     <FormField
@@ -37,7 +39,7 @@ export function FileField<TFieldValues extends FieldValues>({
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <FileDropZone
-              orientation="vertical"
+              orientation={orientation}
               maxFiles={maxFiles}
               maxSize={maxSize}
               multiple={multiple}

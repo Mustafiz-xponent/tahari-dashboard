@@ -138,8 +138,12 @@ export function FileDropZone<TFieldValues extends FieldValues>({
             {(Array.isArray(value) ? value : value ? [value] : []).map(
               (file: File, index: number) => (
                 <FileUploadItem key={index} value={file} className="p-1">
-                  <FileUploadItemPreview className="size-20 [&>svg]:size-12">
-                    <FileUploadItemProgress variant="circular" size={40} />
+                  <FileUploadItemPreview
+                    className={`${
+                      orientation === "vertical" ? "size-20" : "size-48"
+                    }  [&>svg]:size-12`}
+                  >
+                    {/* <FileUploadItemProgress variant="circular" size={40} /> */}
                   </FileUploadItemPreview>
                   <FileUploadItemMetadata
                     className={`${

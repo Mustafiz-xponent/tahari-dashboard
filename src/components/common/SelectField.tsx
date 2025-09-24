@@ -24,6 +24,7 @@ import {
   CommandEmpty,
 } from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
+import { Info } from "lucide-react";
 
 interface SelectOption {
   label: string;
@@ -36,6 +37,7 @@ interface SelectFieldProps<TFieldValues extends FieldValues> {
   label?: string;
   placeholder?: string;
   options: SelectOption[];
+  info?: string;
   isDataLoading?: boolean;
   inputClassName?: string;
   labelClassName?: string;
@@ -47,6 +49,7 @@ export function SelectField<TFieldValues extends FieldValues>({
   label,
   placeholder = "Select...",
   options,
+  info,
   inputClassName,
   labelClassName,
   isDataLoading = false,
@@ -57,16 +60,29 @@ export function SelectField<TFieldValues extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem className="flex w-full flex-col">
-          {label && (
-            <FormLabel
-              className={cn(
-                "text-sm font-medium font-secondary",
-                labelClassName
-              )}
-            >
-              {label}
-            </FormLabel>
-          )}
+          <div className="flex items-center justify-between">
+            {label && (
+              <FormLabel
+                className={cn(
+                  "text-sm font-medium font-secondary",
+                  labelClassName
+                )}
+              >
+                {label}
+              </FormLabel>
+            )}
+            {info && (
+              <Popover>
+                <PopoverTrigger className="cursor-pointer">
+                  <Info className="w-4 h-4 text-typography-50" />
+                </PopoverTrigger>
+                <PopoverContent className="font-secondary text-xs text-typography-50 max-w-[200px]">
+                  {info}
+                </PopoverContent>
+              </Popover>
+            )}
+          </div>
+
           <FormControl>
             <Popover>
               <PopoverTrigger asChild>
