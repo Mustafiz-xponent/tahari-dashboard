@@ -8,9 +8,15 @@ interface ImageProps {
   name: string;
   image: string;
   className?: string;
+  unOptimize?: boolean;
 }
 
-const AppImage = ({ name, image, className }: ImageProps) => {
+const AppImage = ({
+  name,
+  image,
+  className,
+  unOptimize = true,
+}: ImageProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const fallbackImage = "/fallbackImage.jpg";
@@ -52,7 +58,7 @@ const AppImage = ({ name, image, className }: ImageProps) => {
         sizes="100vw"
         width={0}
         height={0}
-        unoptimized
+        unoptimized={unOptimize}
         className={clsx(
           "rounded-sm object-cover w-full h-full transition-opacity duration-300",
           loading ? "opacity-0" : "opacity-100"

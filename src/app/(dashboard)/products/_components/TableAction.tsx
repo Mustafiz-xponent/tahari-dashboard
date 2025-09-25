@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { MoreHorizontal } from "lucide-react";
+import { Eye, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +27,14 @@ const TableAction = ({ data }: { data: Product }) => {
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
+        <DropdownMenuItem asChild>
+          <Link
+            href={`/products/details/${data?.productId}`}
+            className="flex gap-2 items-center font-secondary text-sm  text-typography-75 cursor-pointer"
+          >
+            <Eye className="size-4" /> View Details
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           {/* <EditCategoryDialog category={data} /> */}
         </DropdownMenuItem>
