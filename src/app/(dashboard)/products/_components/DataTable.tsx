@@ -73,13 +73,14 @@ export function DataTable() {
   // update query params when product type change
   const typeQuery = React.useMemo(
     () => ({
-      type,
+      type: type,
     }),
     [type]
   );
 
   useQuery({
     query: typeQuery,
+    debounceMs: 0,
     resetPageOn: ["type"],
   });
 
@@ -164,7 +165,11 @@ export function DataTable() {
             </Table>
           )}
         </div>
-        <DataTablePagination table={table} />
+        <DataTablePagination
+          table={table}
+          isLoading={isLoading}
+          isFetching={isFetching}
+        />
       </div>
     </>
   );

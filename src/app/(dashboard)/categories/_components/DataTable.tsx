@@ -110,7 +110,11 @@ export function DataTable() {
           </Table>
         )}
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination
+        table={table}
+        isLoading={isLoading}
+        isFetching={isFetching}
+      />
     </div>
   );
 }

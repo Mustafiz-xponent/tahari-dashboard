@@ -20,11 +20,15 @@ import {
 interface DataTablePaginationProps<TData> extends React.ComponentProps<"div"> {
   table: Table<TData>;
   pageSizeOptions?: number[];
+  isLoading?: boolean;
+  isFetching?: boolean;
 }
 
 export function DataTablePagination<TData>({
   table,
   pageSizeOptions = [10, 20, 30, 40, 50],
+  isLoading,
+  isFetching,
   className,
   ...props
 }: DataTablePaginationProps<TData>) {
@@ -42,7 +46,8 @@ export function DataTablePagination<TData>({
 
   useQuery({
     query,
-    resetPageOn: ["search", "sort", "type"],
+    debounceMs: 0,
+    resetPageOn: ["search", "type", "name"],
   });
 
   return (
@@ -92,7 +97,7 @@ export function DataTablePagination<TData>({
             size="icon"
             className="hidden size-8 lg:flex"
             onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
+            disabled={!table.getCanPreviousPage() || isLoading || isFetching}
           >
             <ChevronsLeft />
           </Button>
@@ -102,7 +107,7 @@ export function DataTablePagination<TData>({
             size="icon"
             className="size-8"
             onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            disabled={!table.getCanPreviousPage() || isLoading || isFetching}
           >
             <ChevronLeft />
           </Button>
@@ -116,7 +121,7 @@ export function DataTablePagination<TData>({
             size="icon"
             className="size-8"
             onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            disabled={!table.getCanNextPage() || isLoading || isFetching}
           >
             <ChevronRight />
           </Button>
@@ -126,7 +131,7 @@ export function DataTablePagination<TData>({
             size="icon"
             className="hidden size-8 lg:flex"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
+            disabled={!table.getCanNextPage() || isLoading || isFetching}
           >
             <ChevronsRight />
           </Button>

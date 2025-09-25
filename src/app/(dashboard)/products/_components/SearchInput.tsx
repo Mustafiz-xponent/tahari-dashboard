@@ -11,6 +11,7 @@ const SearchInput = () => {
   const query = React.useMemo(() => ({ name: value }), [value]);
   useQuery({
     query,
+    resetPageOn: ["name"],
   });
 
   return (
