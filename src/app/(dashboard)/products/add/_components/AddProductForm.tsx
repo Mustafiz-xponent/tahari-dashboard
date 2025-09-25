@@ -209,7 +209,7 @@ const AddProductForm = () => {
               name="reorderLevel"
               type="number"
               label="Reorder Level"
-              placeholder="1kg"
+              placeholder="10kg"
               info={`The stock level that triggers a restock alert.
               Example: 10 → when stock drops below 10 kg, you’ll be asked to reorder.`}
             />

@@ -9,6 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Product } from "@/types/product";
+import Link from "next/link";
+import ProductDeleteDialog from "@/app/(dashboard)/products/_components/ProductDeleteDialog";
 
 const TableAction = ({ data }: { data: Product }) => {
   return (
@@ -30,7 +32,7 @@ const TableAction = ({ data }: { data: Product }) => {
           {/* <EditCategoryDialog category={data} /> */}
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          {/* <CategoryDeleteDialog categoryId={data?.categoryId} /> */}
+          <ProductDeleteDialog productId={data?.productId} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
