@@ -1,8 +1,8 @@
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
 import { ColumnDef } from "@tanstack/react-table";
+import AppImage from "@/components/common/AppImage";
 import TableAction from "@/app/(dashboard)/categories/_components/TableAction";
-import CategoryImage from "@/app/(dashboard)/categories/_components/CategoryImage";
 
 export const Columns: ColumnDef<Category>[] = [
   {
@@ -18,7 +18,7 @@ export const Columns: ColumnDef<Category>[] = [
     accessorKey: "accessibleImageUrl",
     header: "Image",
     cell: ({ row }) => (
-      <CategoryImage
+      <AppImage
         name={row.getValue("name")}
         image={row.getValue("accessibleImageUrl")}
       />

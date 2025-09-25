@@ -42,7 +42,7 @@ export function DataTablePagination<TData>({
 
   useQuery({
     query,
-    resetPageOn: ["search", "sort"],
+    resetPageOn: ["search", "sort", "type"],
   });
 
   return (

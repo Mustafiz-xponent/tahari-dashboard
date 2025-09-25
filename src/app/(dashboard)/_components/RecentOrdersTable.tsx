@@ -61,7 +61,7 @@ const RecentOrdersTable = ({ orders }: { orders: RecentOrders[] }) => {
   const handleOrderType = (isSubscription: boolean, isPreorder: boolean) => {
     if (isSubscription) return "Subscription";
     if (isPreorder) return "Preorder";
-    return "Standard";
+    return "Regular";
   };
   return (
     <Card className="p-6 rounded-md shadow-none">

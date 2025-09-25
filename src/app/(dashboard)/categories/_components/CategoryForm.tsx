@@ -18,7 +18,7 @@ import {
   createCategorySchema,
   updateCategorySchema,
 } from "@/lib/validations/categorySchema";
-import CategoryImage from "@/app/(dashboard)/categories/_components/CategoryImage";
+import AppImage from "@/components/common/AppImage";
 import { Category } from "@/types/category";
 import { TextAreaField } from "@/components/common/form/TextAreaField";
 import { FileField } from "@/components/common/form/FileField";
@@ -107,7 +107,7 @@ const CategoryForm = ({ setDialogOpen, initialData }: CategoryFormProps) => {
           multiple={false}
         />
         {mode === "EDIT" && initialData && !form.watch("image") && (
-          <CategoryImage
+          <AppImage
             name={initialData.name}
             image={initialData.accessibleImageUrl!}
             className="w-24 h-24"
