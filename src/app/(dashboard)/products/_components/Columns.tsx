@@ -4,6 +4,7 @@ import { TbCurrencyTaka } from "react-icons/tb";
 import { ColumnDef } from "@tanstack/react-table";
 import AppImage from "@/components/common/AppImage";
 import TableAction from "@/app/(dashboard)/products/_components/TableAction";
+import Link from "next/link";
 
 export const Columns: ColumnDef<Product>[] = [
   {
@@ -33,7 +34,11 @@ export const Columns: ColumnDef<Product>[] = [
     header: ({}) => {
       return <div className="font-secondary">Name</div>;
     },
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    cell: ({ row }) => (
+      <Link href={`/products/details/${row.getValue("productId")}`}>
+        {row.getValue("name")}
+      </Link>
+    ),
   },
   {
     accessorKey: "farmerName",

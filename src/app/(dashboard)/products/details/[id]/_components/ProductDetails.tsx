@@ -16,7 +16,13 @@ import AppImage from "@/components/common/AppImage";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@radix-ui/react-separator";
-
+interface PricingCardData {
+  label: string;
+  value: string | number;
+  subLabel: string;
+  isCurrency?: boolean;
+  className?: string;
+}
 const ProductDetailsContent = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetProductQuery(id);
@@ -30,13 +36,7 @@ const ProductDetailsContent = () => {
       (Number(productData?.stockQuantity) +
         Number(productData?.reorderLevel))) *
     100;
-  interface PricingCardData {
-    label: string;
-    value: string | number;
-    subLabel: string;
-    isCurrency?: boolean;
-    className?: string;
-  }
+
   const pricingCardData: PricingCardData[] = [
     {
       label: "Unit Price",
@@ -63,22 +63,28 @@ const ProductDetailsContent = () => {
       subLabel: "Measurement",
     },
   ];
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
-    <div>
-      <header className="flex sm:items-center gap-y-4 sm:flex-row flex-col justify-between mb-3">
+    <>
+      <header className="flex sm:items-center gap-2 sm:flex-row flex-col justify-between ">
         <div>
           <h2 className="font-secondary  text-typography-100 tracking-tight text-2xl font-bold">
-            {productData?.name}
+            Product Details - {productData?.name}
           </h2>
           <p className="text-typography-75 font-secondary">
-            ProductId: {productData?.productId}
+            Manage and review product information at a glance
           </p>
         </div>
         {/* Add Product Button */}
-        <Link href={"/products/edit"}>
+        <Link
+          href={`/products/edit/${productData?.productId}`}
+          className="block self-end"
+        >
           <Button
             variant="outline"
-            className="h-11 w-fit self-end font-secondary rounded-sm cursor-pointer text-typography-5 hover:text-white bg-brand-100 hover:bg-btn-hover"
+            className="h-11 w-fit font-secondary rounded-sm cursor-pointer text-typography-5 hover:text-white bg-brand-100 hover:bg-btn-hover"
           >
             <Pencil />
             <span>Edit Product</span>
@@ -96,7 +102,7 @@ const ProductDetailsContent = () => {
             Subscription Available
           </Badge>
         )}
-        {productData?.data?.isPreorder && (
+        {productData?.isPreorder && (
           <Badge
             variant="default"
             className="bg-orange-100 font-secondary rounded-sm text-orange-800 border border-orange-200"
@@ -141,7 +147,7 @@ const ProductDetailsContent = () => {
         )}
       </div>
       {/* Product Details */}
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-[65%_35%] my-6">
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-[65%_35%] ">
         <div className="space-y-6">
           {/* Product Images */}
           {productData?.accessibleImageUrls.length > 0 && (
@@ -160,7 +166,6 @@ const ProductDetailsContent = () => {
                         <AppImage
                           name={"image"}
                           image={src}
-                          unOptimize={false}
                           className="w-full h-64 border-[1px] border-gray-200 rounded-md cursor-grabbing"
                         />
                       </CarouselItem>
@@ -184,14 +189,14 @@ const ProductDetailsContent = () => {
             <h6 className="font-secondary flex items-center gap-1 text-typography-100 text-xl font-semibold">
               Pricing and Packaging
             </h6>
-            <div className="grid grid-cols-4 gap-4 mt-3">
+            <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 mt-3">
               {pricingCardData?.map((data: PricingCardData, index: number) => {
                 return (
                   <div className={`bg-blue-50 p-3 rounded-md`} key={index}>
                     <p className="font-secondary text-sm font-medium text-typography-50">
                       {data?.label}
                     </p>
-                    <p className="font-secondary flex items-center mt-2 text-typography-100 text-2xl font-semibold">
+                    <p className="font-secondary flex items-center mt-1 text-typography-100 text-xl sm:text-2xl font-extrabold">
                       {data?.isCurrency && (
                         <TbCurrencyTaka className="text-typography-50" />
                       )}
@@ -210,7 +215,7 @@ const ProductDetailsContent = () => {
             </div>
           </div>
         </div>
-        <div>
+        <div className="space-y-6">
           <div className="bg-white border-[1px] border-gray-200 rounded-md p-4">
             <h6 className="font-secondary flex items-center gap-1 text-typography-100 text-xl font-semibold">
               Stock Mangement
@@ -268,9 +273,49 @@ const ProductDetailsContent = () => {
               )}
             </div>
           </div>
+          <div className="bg-white border-[1px] border-gray-200 rounded-md p-4">
+            <h6 className="font-secondary flex items-center gap-1 text-typography-100 text-xl font-semibold">
+              Product Details
+            </h6>
+            <div className="space-y-0.5 my-3">
+              <p className="font-secondary text-typography-50 font-semibold text-sm">
+                Farmer
+              </p>
+              <p className="font-secondary text-typography-100 font-medium">
+                {productData?.farmer?.farmName}
+              </p>
+              <p className="font-secondary text-typography-50 text-sm">
+                {productData?.farmer?.address}
+              </p>
+            </div>
+            <Separator className="my-3 w-full h-0.5 bg-gray-100" />
+            <div>
+              <p className="font-secondary text-typography-50 font-semibold text-sm">
+                Category
+              </p>
+              <Badge className="mt-2 p-1 font-medium px-2 bg-blue-50 text-blue-800 border border-blue-200 rounded-sm font-secondary">
+                {productData?.category?.name}
+              </Badge>
+            </div>
+            <Separator className="my-3 w-full h-0.5 bg-gray-100" />
+            <div>
+              <p className="font-secondary text-typography-50 font-semibold text-sm">
+                Created
+              </p>
+              <p className="font-secondary text-typography-100 text-sm">
+                {new Date(productData?.createdAt).toDateString()}
+              </p>
+              <p className="font-secondary mt-2 text-typography-50 font-semibold text-sm">
+                Last Updated
+              </p>
+              <p className="font-secondary text-typography-100 text-sm">
+                {new Date(productData?.updatedAt).toDateString()}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
