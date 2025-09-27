@@ -7,12 +7,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import FormSubmitBtn from "@/components/common/form/FormSubmitBtn";
-import { useCreateProductMutation } from "@/redux/services/productsApi";
-import { createProductSchema } from "@/lib/validations/productSchema";
+import {
+  useGetProductQuery,
+  useUpdateProductMutation,
+} from "@/redux/services/productsApi";
+import { updateProductSchema } from "@/lib/validations/productSchema";
 import { ProductUnitType } from "@/types/product";
 import { InputField } from "@/components/common/form/InputField";
 import { SelectField } from "@/components/common/form/SelectField";
-import { SwitchField } from "@/components/common/form/SwitchField";
 import { DatePickerField } from "@/components/common/form/DatePickerField";
 import { TextAreaField } from "@/components/common/form/TextAreaField";
 import { FileField } from "@/components/common/form/FileField";
@@ -20,17 +22,22 @@ import { useGetAllCategoriesQuery } from "@/redux/services/categoriesApi";
 import { useGetAllFarmersQuery } from "@/redux/services/farmersApi";
 import { Category } from "@/types/category";
 import { Farmer } from "@/types/farmer";
+import { useParams } from "next/navigation";
+import AppImage from "@/components/common/AppImage";
 
-const AddProductForm = () => {
-  const [addProductHandler, { isLoading }] = useCreateProductMutation();
+const EditProductForm = () => {
+  const { id } = useParams();
+  const [editProductHandler, { isLoading }] = useUpdateProductMutation();
   const { data: categoryData, isLoading: categoryLoading } =
     useGetAllCategoriesQuery({ limit: 100 });
+  const { data: productData } = useGetProductQuery(id);
   const { data: farmerData, isLoading: farmerLoading } = useGetAllFarmersQuery({
     limit: 100,
   });
+  console.log("PRODUCT DATA: ", productData);
 
-  const form = useForm<z.infer<typeof createProductSchema>>({
-    resolver: zodResolver(createProductSchema),
+  const form = useForm<z.infer<typeof updateProductSchema>>({
+    resolver: zodResolver(updateProductSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -39,8 +46,6 @@ const AddProductForm = () => {
       packageSize: "",
       stockQuantity: "",
       reorderLevel: "",
-      isSubscription: false,
-      isPreorder: false,
       preorderAvailabilityDate: undefined,
       categoryId: "",
       farmerId: "",
@@ -49,33 +54,28 @@ const AddProductForm = () => {
     mode: "onChange",
   });
 
-  const isPreorder = form.watch("isPreorder");
-  const isSubscription = form.watch("isSubscription");
-
+  // When productData is loaded, populate the form
   React.useEffect(() => {
-    if (isPreorder) {
-      // Ensure subscription is turned off
-      form.setValue("isSubscription", false, { shouldValidate: true });
-    } else {
-      // Clear preorder date when preorder is off
-      form.setValue("preorderAvailabilityDate", undefined, {
-        shouldValidate: true,
+    if (productData) {
+      form.reset({
+        name: productData?.data?.name || "",
+        description: productData?.data?.description || "",
+        unitType: productData?.data?.unitType || undefined,
+        unitPrice: productData?.data?.unitPrice.toString() || "",
+        packageSize: productData?.data?.packageSize.toString() || "",
+        stockQuantity: productData?.data?.stockQuantity.toString() || "",
+        reorderLevel: productData?.data?.reorderLevel.toString() || "",
+        preorderAvailabilityDate: productData?.data?.preorderAvailabilityDate
+          ? new Date(productData?.data?.preorderAvailabilityDate)
+          : undefined,
+        categoryId: productData?.data?.categoryId || "",
+        farmerId: productData?.data?.farmerId || "",
+        images: [], // Files cannot be prefilled; handle separately if needed
       });
     }
-  }, [isPreorder, form]);
+  }, [productData, form]);
 
-  React.useEffect(() => {
-    if (isSubscription) {
-      // Ensure preorder is turned off
-      form.setValue("isPreorder", false, { shouldValidate: true });
-      // Reset preorder date since it's no longer valid
-      form.setValue("preorderAvailabilityDate", undefined, {
-        shouldValidate: true,
-      });
-    }
-  }, [isSubscription, form]);
-
-  async function onSubmit(data: z.infer<typeof createProductSchema>) {
+  async function onSubmit(data: z.infer<typeof updateProductSchema>) {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (value === undefined || value === null) return;
@@ -83,7 +83,7 @@ const AddProductForm = () => {
       if (Array.isArray(value)) {
         // Append files individually
         value.forEach(
-          (item: z.infer<typeof createProductSchema>["images"][0]) => {
+          (item: z.infer<typeof updateProductSchema>["images"][0]) => {
             if (item instanceof File) formData.append(key, item, item.name);
           }
         );
@@ -97,9 +97,12 @@ const AddProductForm = () => {
     });
 
     try {
-      const response = await addProductHandler(formData).unwrap();
+      const response = await editProductHandler({
+        productId: id,
+        formData,
+      }).unwrap();
       if (response.success) {
-        toast.success(response?.message || "Product added successfully.");
+        toast.success(response?.message || "Product edited successfully.");
         form.reset();
       }
     } catch (err: unknown) {
@@ -213,21 +216,8 @@ const AddProductForm = () => {
               Example: 10 → when stock drops below 10 kg, you’ll be asked to reorder.`}
             />
           </div>
-          <SwitchField
-            control={form.control}
-            name="isSubscription"
-            label="Enable Subscription"
-            description="Let customers subscribe for recurring deliveries."
-            info="Great for items people buy regularly, like groceries or household essentials."
-          />
-          <SwitchField
-            control={form.control}
-            name="isPreorder"
-            label="Enable Pre-order"
-            description="Allow customers to order before the product is available."
-            info="Useful for products launching soon. Customers will pay now and receive the item later."
-          />
-          {isPreorder && (
+
+          {productData?.data?.isPreorder && (
             <DatePickerField
               control={form.control}
               name="preorderAvailabilityDate"
@@ -247,8 +237,24 @@ const AddProductForm = () => {
             multiple={true}
             orientation="horizontal"
           />
+
+          {productData?.data?.accessibleImageUrls?.length > 0 && (
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {productData?.data?.accessibleImageUrls?.map((image: string) => {
+                return (
+                  <AppImage
+                    name={"Product Image"}
+                    image={image}
+                    key={image}
+                    className="size-24 sm:size-48 mt-4 border-[1px] border-border rounded-md"
+                  />
+                );
+              })}
+            </div>
+          )}
+
           <FormSubmitBtn
-            text={"Add Product"}
+            text={"Edit Product"}
             isLoading={isLoading}
             className="sm:w-fit w-1/2 min-w-[200px] h-12 mt-6 float-right"
             spinnerSize={23}
@@ -259,4 +265,4 @@ const AddProductForm = () => {
   );
 };
 
-export default AddProductForm;
+export default EditProductForm;

@@ -59,3 +59,42 @@ export const createProductSchema = z
       path: ["preorderAvailabilityDate"],
     }
   );
+
+export const updateProductSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  description: z.string().optional(),
+  unitType: z.enum(
+    Object.values(ProductUnitType) as [ProductUnitType, ...ProductUnitType[]],
+    {
+      error: "Unit type is required",
+    }
+  ),
+  unitPrice: positiveNumber("Unit price is required", "Must be positive"),
+  packageSize: positiveNumber("Package size is required", "Must be positive"),
+  stockQuantity: positiveNumber(
+    "Stock quantity is required",
+    "Must be positive"
+  ),
+  reorderLevel: positiveNumber(
+    "Reorder level is required",
+    "Must be positive"
+  ).optional(),
+  preorderAvailabilityDate: z.date().optional(),
+  categoryId: positiveNumber("Category is required", "Must be positive"),
+  farmerId: positiveNumber("Farmer is required", "Must be positive"),
+  images: z
+    .array(
+      z.custom<File>((val) => val instanceof File, {
+        message: "Each item must be a File",
+      })
+    )
+    .min(1, "At least one image is required")
+    .refine(
+      (files) => files.every((f) => f.type.startsWith("image/")),
+      "All files must be images"
+    )
+    .refine(
+      (files) => files.every((f) => f.size <= 1 * 1024 * 1024),
+      "Each file must be <= 1MB"
+    ),
+});

@@ -96,7 +96,7 @@ export function SelectField<TFieldValues extends FieldValues>({
                   )}
                 >
                   {field.value
-                    ? options.find((opt) => opt.value === field.value)?.label
+                    ? options?.find((opt) => opt.value === field.value)?.label
                     : placeholder}
                   <ChevronsUpDown className="opacity-50" />
                 </Button>

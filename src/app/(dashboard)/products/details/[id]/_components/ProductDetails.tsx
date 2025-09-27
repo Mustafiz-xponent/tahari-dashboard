@@ -28,7 +28,7 @@ const ProductDetailsContent = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetProductQuery(id);
   const productData = data?.data;
-  console.log("PRODUCT DATA:", productData);
+
   const isLowStock =
     Number(productData?.stockQuntity) <= Number(productData?.reorderLevel);
   const isOutOfStock = Number(productData?.stockQuntity) === 0;
