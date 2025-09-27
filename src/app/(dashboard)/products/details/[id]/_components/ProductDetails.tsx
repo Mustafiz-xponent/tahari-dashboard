@@ -16,6 +16,7 @@ import AppImage from "@/components/common/AppImage";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@radix-ui/react-separator";
+import ProductDetailsLoadingSkeleton from "@/app/(dashboard)/products/details/[id]/_components/ProductDetailsLoadingSkeleton";
 interface PricingCardData {
   label: string;
   value: string | number;
@@ -64,11 +65,11 @@ const ProductDetailsContent = () => {
     },
   ];
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <ProductDetailsLoadingSkeleton />;
   }
   return (
     <>
-      <header className="flex sm:items-center gap-2 sm:flex-row flex-col justify-between ">
+      <header className="flex sm:items-center gap-2 sm:flex-row flex-col justify-between">
         <div>
           <h2 className="font-secondary  text-typography-100 tracking-tight text-2xl font-bold">
             Product Details - {productData?.name}
@@ -147,7 +148,7 @@ const ProductDetailsContent = () => {
         )}
       </div>
       {/* Product Details */}
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-[65%_35%] ">
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-[calc(65%-8px)_calc(35%-8px)]">
         <div className="space-y-6">
           {/* Product Images */}
           {productData?.accessibleImageUrls.length > 0 && (
@@ -189,7 +190,7 @@ const ProductDetailsContent = () => {
             <h6 className="font-secondary flex items-center gap-1 text-typography-100 text-xl font-semibold">
               Pricing and Packaging
             </h6>
-            <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 mt-3">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
               {pricingCardData?.map((data: PricingCardData, index: number) => {
                 return (
                   <div className={`bg-blue-50 p-3 rounded-md`} key={index}>

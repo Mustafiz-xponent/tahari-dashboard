@@ -1,10 +1,10 @@
+import Link from "next/link";
 import { Product } from "@/types/product";
 import { Badge } from "@/components/ui/badge";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { ColumnDef } from "@tanstack/react-table";
 import AppImage from "@/components/common/AppImage";
 import TableAction from "@/app/(dashboard)/products/_components/TableAction";
-import Link from "next/link";
 
 export const Columns: ColumnDef<Product>[] = [
   {
@@ -35,7 +35,10 @@ export const Columns: ColumnDef<Product>[] = [
       return <div className="font-secondary">Name</div>;
     },
     cell: ({ row }) => (
-      <Link href={`/products/details/${row.getValue("productId")}`}>
+      <Link
+        href={`/products/details/${row.getValue("productId")}`}
+        className="hover:underline"
+      >
         {row.getValue("name")}
       </Link>
     ),
