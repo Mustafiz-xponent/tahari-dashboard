@@ -82,19 +82,20 @@ export const updateProductSchema = z.object({
   preorderAvailabilityDate: z.date().optional(),
   categoryId: positiveNumber("Category is required", "Must be positive"),
   farmerId: positiveNumber("Farmer is required", "Must be positive"),
+  deletedImages: z.string().array().optional(),
   images: z
     .array(
       z.custom<File>((val) => val instanceof File, {
         message: "Each item must be a File",
       })
     )
-    .min(1, "At least one image is required")
+    .optional()
     .refine(
-      (files) => files.every((f) => f.type.startsWith("image/")),
+      (files) => !files || files.every((f) => f.type.startsWith("image/")),
       "All files must be images"
     )
     .refine(
-      (files) => files.every((f) => f.size <= 1 * 1024 * 1024),
+      (files) => !files || files.every((f) => f.size <= 1 * 1024 * 1024),
       "Each file must be <= 1MB"
     ),
 });

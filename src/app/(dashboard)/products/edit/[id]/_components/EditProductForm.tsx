@@ -1,6 +1,6 @@
 "use client";
 import { z } from "zod";
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 import { IApiError } from "@/types";
 import { useForm } from "react-hook-form";
@@ -24,9 +24,11 @@ import { Category } from "@/types/category";
 import { Farmer } from "@/types/farmer";
 import { useParams } from "next/navigation";
 import AppImage from "@/components/common/AppImage";
+import { X } from "lucide-react";
 
 const EditProductForm = () => {
   const { id } = useParams();
+  const [deletedImages, setDeletedImages] = useState<string[]>([]);
   const [editProductHandler, { isLoading }] = useUpdateProductMutation();
   const { data: categoryData, isLoading: categoryLoading } =
     useGetAllCategoriesQuery({ limit: 100 });
@@ -70,10 +72,39 @@ const EditProductForm = () => {
           : undefined,
         categoryId: productData?.data?.categoryId || "",
         farmerId: productData?.data?.farmerId || "",
-        images: [], // Files cannot be prefilled; handle separately if needed
+        images: [],
       });
     }
   }, [productData, form]);
+
+  const productUnitTypeOptions = Object.values(ProductUnitType).map((unit) => ({
+    label: unit,
+    value: unit,
+  }));
+  const categoryOptions = categoryData?.data?.map((cat: Category) => ({
+    label: cat?.name,
+    value: cat?.categoryId,
+  }));
+  const farmerOptions = farmerData?.data?.map((farmer: Farmer) => ({
+    label: farmer?.name,
+    value: farmer?.farmerId,
+  }));
+  // Get s3 image key from presigned url
+  const getS3Imagekey = (imageUrl: string) => {
+    const url = new URL(imageUrl);
+    return url.pathname.substring(1); // Remove leading '/'
+  };
+
+  const filteredImageUrls = productData?.data?.accessibleImageUrls?.filter(
+    (img: string) => {
+      const filtered = !deletedImages.includes(getS3Imagekey(img));
+      return filtered;
+    }
+  );
+  const handleDeletedImages = (image: string) => {
+    if (deletedImages.includes(image)) return;
+    setDeletedImages((prev): string[] => [...prev, image]);
+  };
 
   async function onSubmit(data: z.infer<typeof updateProductSchema>) {
     const formData = new FormData();
@@ -82,11 +113,9 @@ const EditProductForm = () => {
 
       if (Array.isArray(value)) {
         // Append files individually
-        value.forEach(
-          (item: z.infer<typeof updateProductSchema>["images"][0]) => {
-            if (item instanceof File) formData.append(key, item, item.name);
-          }
-        );
+        value.forEach((item) => {
+          if (item instanceof File) formData.append(key, item, item.name);
+        });
       } else if (value instanceof Date) {
         formData.append(key, value.toISOString());
       } else if (typeof value === "boolean") {
@@ -110,18 +139,6 @@ const EditProductForm = () => {
       toast.error(error?.data?.error?.message || "Something went wrong.");
     }
   }
-  const productUnitTypeOptions = Object.values(ProductUnitType).map((unit) => ({
-    label: unit,
-    value: unit,
-  }));
-  const categoryOptions = categoryData?.data?.map((cat: Category) => ({
-    label: cat?.name,
-    value: cat?.categoryId,
-  }));
-  const farmerOptions = farmerData?.data?.map((farmer: Farmer) => ({
-    label: farmer?.name,
-    value: farmer?.farmerId,
-  }));
 
   return (
     <Form {...form}>
@@ -238,16 +255,23 @@ const EditProductForm = () => {
             orientation="horizontal"
           />
 
-          {productData?.data?.accessibleImageUrls?.length > 0 && (
+          {filteredImageUrls?.length > 0 && (
             <div className="flex flex-wrap items-center justify-center gap-2">
-              {productData?.data?.accessibleImageUrls?.map((image: string) => {
+              {filteredImageUrls?.map((image: string, ind: number) => {
                 return (
-                  <AppImage
-                    name={"Product Image"}
-                    image={image}
-                    key={image}
-                    className="size-24 sm:size-48 mt-4 border-[1px] border-border rounded-md"
-                  />
+                  <div key={ind} className="relative">
+                    <div
+                      onClick={() => handleDeletedImages(getS3Imagekey(image))}
+                      className="absolute top-1.5 border-[1px] border-gray-200 -right-1 bg-white rounded-full p-1 cursor-pointer hover:bg-red-100 z-10"
+                    >
+                      <X className="size-3 text-red-500" />
+                    </div>
+                    <AppImage
+                      name={"Product Image"}
+                      image={image}
+                      className="size-24 sm:size-48 mt-4 border-[1px] border-border rounded-md"
+                    />
+                  </div>
                 );
               })}
             </div>
