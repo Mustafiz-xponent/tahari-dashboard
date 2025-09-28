@@ -108,7 +108,6 @@ const EditProductForm = () => {
   const newImages = form.watch("images") as File[];
 
   async function onSubmit(data: z.infer<typeof updateProductSchema>) {
-    console.log("data", data);
     const hasImages =
       (filteredImageUrls?.length ?? 0) > 0 || newImages?.length > 0;
     if (!hasImages) {
@@ -120,7 +119,6 @@ const EditProductForm = () => {
       if (value === undefined || value === null) return;
 
       if (Array.isArray(value)) {
-        // Append files individually
         value.forEach((item) => {
           if (item instanceof File) formData.append(key, item, item.name);
         });
@@ -284,7 +282,7 @@ const EditProductForm = () => {
                     <AppImage
                       name={"Product Image"}
                       image={image}
-                      className="size-24 sm:size-48 block rounded-md"
+                      className="size-24 sm:size-48 block border-[1px] border-gray-200 rounded-md"
                     />
                   </div>
                 );

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Eye, MoreHorizontal } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,7 +36,12 @@ const TableAction = ({ data }: { data: Product }) => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          {/* <EditCategoryDialog category={data} /> */}
+          <Link
+            href={`/products/edit/${data?.productId}`}
+            className="flex gap-2 items-center font-secondary text-sm  text-typography-75 cursor-pointer"
+          >
+            <Pencil className="size-4" /> Edit
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <ProductDeleteDialog productId={data?.productId} />

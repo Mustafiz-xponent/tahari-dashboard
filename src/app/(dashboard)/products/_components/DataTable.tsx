@@ -21,6 +21,7 @@ import { Columns } from "@/app/(dashboard)/products/_components/Columns";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetAllProductsQuery } from "@/redux/services/productsApi";
 import { useQuery } from "@/hooks/use-query";
+import TableFilterDialog from "@/app/(dashboard)/products/_components/TableFilterDialog";
 
 export function DataTable() {
   const searchParams = useSearchParams();
@@ -106,7 +107,11 @@ export function DataTable() {
       </Tabs>
 
       <div className="w-full border rounded-lg p-6 bg-white">
-        <SearchInput /> {/* Search input */}
+        <div className="flex items-center justify-between mb-4">
+          <SearchInput />
+          <TableFilterDialog />
+        </div>
+        {/* Search input */}
         <div className="overflow-hidden rounded-md border">
           {isLoading || isFetching ? (
             <DataTableSkeleton

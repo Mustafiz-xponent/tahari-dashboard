@@ -15,7 +15,7 @@ const SearchInput = () => {
   });
 
   return (
-    <div className="flex items-center pb-4">
+    <div className="flex items-center">
       <Input
         placeholder="Search Products..."
         value={value}

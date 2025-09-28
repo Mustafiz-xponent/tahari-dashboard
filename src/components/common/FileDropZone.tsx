@@ -142,7 +142,7 @@ export function FileDropZone<TFieldValues extends FieldValues>({
                     className={`${
                       orientation === "vertical"
                         ? "size-20"
-                        : "size-24 sm:size-48"
+                        : "size-24 sm:size-48 rounded-md"
                     }  [&>svg]:size-12`}
                   >
                     {/* <FileUploadItemProgress variant="circular" size={40} /> */}
