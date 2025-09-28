@@ -152,11 +152,14 @@ export function FileDropZone<TFieldValues extends FieldValues>({
                       orientation === "vertical" ? "self-start pt-1" : "sr-only"
                     }`}
                   />
-                  <FileUploadItemDelete asChild>
+                  <FileUploadItemDelete
+                    asChild
+                    className="cursor-pointer hover:bg-red-50"
+                  >
                     <Button
                       variant="secondary"
                       size="icon"
-                      className="-top-1 -right-1 absolute size-5 rounded-full"
+                      className="-top-1  -right-1 absolute size-5 rounded-full"
                     >
                       <X className="size-3" />
                     </Button>

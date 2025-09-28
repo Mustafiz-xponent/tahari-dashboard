@@ -22,10 +22,13 @@ export const Columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const product = row.original;
       return (
-        <AppImage
-          name={row.getValue("name")}
-          image={product?.accessibleImageUrls[0]}
-        />
+        <Link href={`/products/details/${row.getValue("productId")}`}>
+          <AppImage
+            name={row.getValue("name")}
+            image={product?.accessibleImageUrls[0]}
+            className="hover:scale-105 transition-all duration-300"
+          />
+        </Link>
       );
     },
   },

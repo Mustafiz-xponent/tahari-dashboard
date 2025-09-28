@@ -36,7 +36,6 @@ const EditProductForm = () => {
   const { data: farmerData, isLoading: farmerLoading } = useGetAllFarmersQuery({
     limit: 100,
   });
-  console.log("PRODUCT DATA: ", productData);
 
   const form = useForm<z.infer<typeof updateProductSchema>>({
     resolver: zodResolver(updateProductSchema),
@@ -106,7 +105,16 @@ const EditProductForm = () => {
     setDeletedImages((prev): string[] => [...prev, image]);
   };
 
+  const newImages = form.watch("images") as File[];
+
   async function onSubmit(data: z.infer<typeof updateProductSchema>) {
+    console.log("data", data);
+    const hasImages =
+      (filteredImageUrls?.length ?? 0) > 0 || newImages?.length > 0;
+    if (!hasImages) {
+      toast.error("At least one image is required.");
+      return;
+    }
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (value === undefined || value === null) return;
@@ -124,6 +132,11 @@ const EditProductForm = () => {
         formData.append(key, String(value));
       }
     });
+    if (deletedImages?.length > 0) {
+      deletedImages.forEach((img, index) => {
+        formData.append(`deletedImages[${index}]`, img);
+      });
+    }
 
     try {
       const response = await editProductHandler({
@@ -132,7 +145,6 @@ const EditProductForm = () => {
       }).unwrap();
       if (response.success) {
         toast.success(response?.message || "Product edited successfully.");
-        form.reset();
       }
     } catch (err: unknown) {
       const error = err as IApiError;
@@ -249,7 +261,7 @@ const EditProductForm = () => {
             control={form.control}
             name="images"
             label="Upload Images"
-            maxFiles={10}
+            maxFiles={10 - filteredImageUrls?.length}
             maxSize={1}
             multiple={true}
             orientation="horizontal"
@@ -259,17 +271,20 @@ const EditProductForm = () => {
             <div className="flex flex-wrap items-center justify-center gap-2">
               {filteredImageUrls?.map((image: string, ind: number) => {
                 return (
-                  <div key={ind} className="relative">
+                  <div
+                    key={ind}
+                    className="relative p-1 rounded-md mt-4 inline border-[1px] border-border"
+                  >
                     <div
                       onClick={() => handleDeletedImages(getS3Imagekey(image))}
-                      className="absolute top-1.5 border-[1px] border-gray-200 -right-1 bg-white rounded-full p-1 cursor-pointer hover:bg-red-100 z-10"
+                      className="absolute -top-1 hover:bg-red-50 border-[1px] border-gray-200 -right-1 bg-white rounded-full p-1 cursor-pointer  z-10"
                     >
-                      <X className="size-3 text-red-500" />
+                      <X className="size-3" />
                     </div>
                     <AppImage
                       name={"Product Image"}
                       image={image}
-                      className="size-24 sm:size-48 mt-4 border-[1px] border-border rounded-md"
+                      className="size-24 sm:size-48 block rounded-md"
                     />
                   </div>
                 );
