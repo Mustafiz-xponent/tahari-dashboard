@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { ProductUnitType } from "@/types/product";
 
-const positiveNumber = (requiredMessage: string, positiveMessage: string) =>
+const integerNumber = (requiredMessage: string, message: string) =>
   z
     .string()
     .min(1, requiredMessage)
-    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: positiveMessage,
+    .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
+      message: message,
     });
 
 export const createProductSchema = z
@@ -19,21 +19,21 @@ export const createProductSchema = z
         error: "Unit type is required",
       }
     ),
-    unitPrice: positiveNumber("Unit price is required", "Must be positive"),
-    packageSize: positiveNumber("Package size is required", "Must be positive"),
-    stockQuantity: positiveNumber(
+    unitPrice: integerNumber("Unit price is required", "Must be positive"),
+    packageSize: integerNumber("Package size is required", "Must be positive"),
+    stockQuantity: integerNumber(
       "Stock quantity is required",
       "Must be positive"
     ),
-    reorderLevel: positiveNumber(
+    reorderLevel: integerNumber(
       "Reorder level is required",
       "Must be positive"
     ).optional(),
     isSubscription: z.boolean().optional(),
     isPreorder: z.boolean().optional(),
     preorderAvailabilityDate: z.date().optional(),
-    categoryId: positiveNumber("Category is required", "Must be positive"),
-    farmerId: positiveNumber("Farmer is required", "Must be positive"),
+    categoryId: integerNumber("Category is required", "Must be positive"),
+    farmerId: integerNumber("Farmer is required", "Must be positive"),
     images: z
       .array(
         z.custom<File>((val) => val instanceof File, {
@@ -69,19 +69,19 @@ export const updateProductSchema = z.object({
       error: "Unit type is required",
     }
   ),
-  unitPrice: positiveNumber("Unit price is required", "Must be positive"),
-  packageSize: positiveNumber("Package size is required", "Must be positive"),
-  stockQuantity: positiveNumber(
+  unitPrice: integerNumber("Unit price is required", "Must be positive"),
+  packageSize: integerNumber("Package size is required", "Must be positive"),
+  stockQuantity: integerNumber(
     "Stock quantity is required",
     "Must be positive"
   ),
-  reorderLevel: positiveNumber(
+  reorderLevel: integerNumber(
     "Reorder level is required",
     "Must be positive"
   ).optional(),
   preorderAvailabilityDate: z.date().optional(),
-  categoryId: positiveNumber("Category is required", "Must be positive"),
-  farmerId: positiveNumber("Farmer is required", "Must be positive"),
+  categoryId: integerNumber("Category is required", "Must be positive"),
+  farmerId: integerNumber("Farmer is required", "Must be positive"),
   deletedImages: z.string().array().optional(),
   images: z
     .array(

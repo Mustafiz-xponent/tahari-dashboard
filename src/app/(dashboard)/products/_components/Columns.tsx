@@ -85,7 +85,7 @@ export const Columns: ColumnDef<Product>[] = [
         stockQuantity: number,
         reorderLevel: number
       ) => {
-        if (stockQuantity < reorderLevel) return "Low Stock";
+        if (stockQuantity <= reorderLevel) return "Low Stock";
         if (stockQuantity === 0) return "Out of Stock";
         return "In Stock";
       };

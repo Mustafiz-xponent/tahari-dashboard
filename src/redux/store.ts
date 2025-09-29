@@ -1,14 +1,15 @@
 import { authApi } from "@/redux/services/authApi";
 import userReducer from "@/redux/slices/userSlice";
+import { dealsApi } from "@/redux/services/dealsApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { farmersApi } from "@/redux/services/farmersApi";
+import { productsApi } from "@/redux/services/productsApi";
 import { dashboardApi } from "@/redux/services/dashboardApi";
+import { promotionApi } from "@/redux/services/promotionApi";
 import { categoriesApi } from "@/redux/services/categoriesApi";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import { PersistConfig, persistReducer, persistStore } from "redux-persist";
-
-import { productsApi } from "./services/productsApi";
 
 // Fallback no-op storage for non-browser environments
 const createNoopStorage = () => {
@@ -38,6 +39,8 @@ const rootReducer = combineReducers({
   [farmersApi.reducerPath]: farmersApi.reducer,
   [categoriesApi.reducerPath]: categoriesApi.reducer,
   [productsApi.reducerPath]: productsApi.reducer,
+  [promotionApi.reducerPath]: promotionApi.reducer,
+  [dealsApi.reducerPath]: dealsApi.reducer,
 });
 
 // Define the persist config type
@@ -58,7 +61,9 @@ const store = configureStore({
       dashboardApi.middleware,
       farmersApi.middleware,
       categoriesApi.middleware,
-      productsApi.middleware
+      productsApi.middleware,
+      promotionApi.middleware,
+      dealsApi.middleware
     ),
 });
 

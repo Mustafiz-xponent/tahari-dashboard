@@ -5,7 +5,7 @@ export const createCategorySchema = z.object({
   description: z.string().optional(),
   image: z
     .any()
-    .refine((file) => file instanceof File, "Please upload one file")
+    .refine((file) => file instanceof File, "Please upload one Image")
     .refine(
       (file) => file?.type?.startsWith("image/"),
       "Only image files are allowed"

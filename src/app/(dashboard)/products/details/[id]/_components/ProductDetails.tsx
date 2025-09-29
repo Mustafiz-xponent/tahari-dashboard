@@ -30,8 +30,9 @@ const ProductDetailsContent = () => {
   const productData = data?.data;
 
   const isLowStock =
-    Number(productData?.stockQuntity) <= Number(productData?.reorderLevel);
-  const isOutOfStock = Number(productData?.stockQuntity) === 0;
+    Number(productData?.stockQuantity) <= Number(productData?.reorderLevel);
+
+  const isOutOfStock = Number(productData?.stockQuantity) === 0;
   const stockPercentage =
     (Number(productData?.stockQuantity) /
       (Number(productData?.stockQuantity) +
@@ -115,7 +116,7 @@ const ProductDetailsContent = () => {
         {(productData?.hasActiveDeal || productData?.hasActiveGlobalDeal) && (
           <Badge
             variant="default"
-            className="rounded-sm flex items-center font-secondary  bg-red-100 text-red-800 border border-red-200"
+            className="rounded-sm flex items-center font-secondary  bg-green-100 text-green-800 border border-green-200"
           >
             <Tag className="w-3 h-3 mr-1" />
             {productData?.deal?.discountValue}
@@ -131,7 +132,7 @@ const ProductDetailsContent = () => {
         {isLowStock && (
           <Badge
             variant="default"
-            className="font-secondary flex items-center rounded-sm bg-yellow-100 text-yellow-800 border border-yellow-200"
+            className="font-secondary flex items-center rounded-sm bg-red-100 text-red-800 border border-red-200"
           >
             <AlertTriangle className="w-3 h-3" />
             Low Stock
@@ -262,7 +263,7 @@ const ProductDetailsContent = () => {
               </div>
 
               {isLowStock && (
-                <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                <div className="p-3 bg-destructive/10 border border-destructive/20 font-secondary mt-1 rounded-lg">
                   <div className="flex items-center gap-2 text-destructive">
                     <AlertTriangle className="h-4 w-4" />
                     <span className="text-sm font-medium">Stock Alert</span>
