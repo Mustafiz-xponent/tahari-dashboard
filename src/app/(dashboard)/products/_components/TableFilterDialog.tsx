@@ -19,7 +19,6 @@ import { useGetAllFarmersQuery } from "@/redux/services/farmersApi";
 import { Farmer } from "@/types/farmer";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   useQueryStates,
   parseAsArrayOf,
@@ -38,7 +37,6 @@ const productTypesData = [
   { value: "preorder", label: "Preorder" },
 ];
 const TableFilterDialog = () => {
-  const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
   const [categoriesLimit, setCategoriesLimit] = React.useState(5);
   const [farmersLimit, setFarmersLimit] = React.useState(5);

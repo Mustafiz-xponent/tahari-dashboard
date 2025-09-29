@@ -21,10 +21,14 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetAllProductsQuery } from "@/redux/services/productsApi";
 import TableFilterDialog from "@/app/(dashboard)/products/_components/TableFilterDialog";
 import { useQueryStates, parseAsInteger, parseAsString } from "nuqs";
+import { RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const VALID_TYPES = ["regular", "subscription", "preorder"] as const;
 type ProductType = (typeof VALID_TYPES)[number];
 export function DataTable() {
+  const router = useRouter();
   const [filters, setFilters] = useQueryStates({
     name: parseAsString.withDefault(""),
     limit: parseAsInteger.withDefault(10),
@@ -121,7 +125,17 @@ export function DataTable() {
       <div className="w-full border rounded-lg p-6 bg-white">
         <div className="flex items-center gap-2 justify-between mb-4">
           <SearchInput />
-          <TableFilterDialog />
+          <div className="flex items-center gap-2">
+            <Button
+              variant={"outline"}
+              onClick={() => router.push("/products")}
+              className="cursor-pointer"
+            >
+              <RefreshCw className="w-4 h-4 text-gray-500 cursor-pointer" />
+            </Button>
+
+            <TableFilterDialog />
+          </div>
         </div>
         {/* Search input */}
         <div className="overflow-hidden rounded-md border">
