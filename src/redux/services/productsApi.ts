@@ -24,13 +24,25 @@ export const productsApi = createApi({
     }),
 
     getAllProducts: builder.query({
-      query: ({ name, limit, page, isSubscription, isPreorder }) => {
+      query: ({
+        name,
+        limit,
+        page,
+        isSubscription,
+        isPreorder,
+        status,
+        categoryIds,
+        farmerIds,
+      }) => {
         const params = new URLSearchParams();
         if (name) params.append("name", name);
         if (limit) params.append("limit", limit);
         if (page) params.append("page", page);
         if (isSubscription) params.append("isSubscription", isSubscription);
         if (isPreorder) params.append("isPreorder", isPreorder);
+        if (status) params.append("status", status);
+        if (categoryIds) params.append("categoryIds", categoryIds);
+        if (farmerIds) params.append("farmerIds", farmerIds);
 
         return {
           url: `/api/products`,

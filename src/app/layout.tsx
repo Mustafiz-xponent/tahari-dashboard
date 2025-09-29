@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import type { Metadata } from "next";
 import { Poppins, Inter } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import ReduxProvider from "@/providers/ReduxProvider";
 
 const poppins = Poppins({
@@ -34,7 +35,9 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Toaster richColors position="top-right" />
-        <ReduxProvider>{children}</ReduxProvider>
+        <ReduxProvider>
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </ReduxProvider>
       </body>
     </html>
   );

@@ -2,10 +2,8 @@
 import React from "react";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -21,26 +19,62 @@ import { useGetAllFarmersQuery } from "@/redux/services/farmersApi";
 import { Farmer } from "@/types/farmer";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  useQueryStates,
+  parseAsArrayOf,
+  parseAsString,
+  parseAsInteger,
+} from "nuqs";
+
+const statusData = [
+  { value: "in-stock", label: "In Stock" },
+  { value: "out-of-stock", label: "Out of Stock" },
+  { value: "low-stock", label: "Low Stock" },
+];
+const productTypesData = [
+  { value: "regular", label: "Regular" },
+  { value: "subscription", label: "Subscription" },
+  { value: "preorder", label: "Preorder" },
+];
 const TableFilterDialog = () => {
-  const { data: categoriesData } = useGetAllCategoriesQuery({});
-  const { data: farmersData } = useGetAllFarmersQuery({});
+  const router = useRouter();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [categoriesLimit, setCategoriesLimit] = React.useState(5);
+  const [farmersLimit, setFarmersLimit] = React.useState(5);
+  const [urlFilters, setUrlFilters] = useQueryStates({
+    page: parseAsInteger.withDefault(1),
+    categoryIds: parseAsArrayOf(parseAsString).withDefault([]),
+    farmerIds: parseAsArrayOf(parseAsString).withDefault([]),
+    status: parseAsString.withDefault(""),
+    type: parseAsString.withDefault(""),
+  });
+  const {
+    data: categoriesData,
+    isLoading: categoriesLoading,
+    isFetching: categoriesFetching,
+  } = useGetAllCategoriesQuery({ limit: categoriesLimit });
+  const {
+    data: farmersData,
+    isLoading: farmersLoading,
+    isFetching: farmersFetching,
+  } = useGetAllFarmersQuery({ limit: farmersLimit });
   const [selectedCategories, setSelectedCategories] = React.useState<string[]>(
     []
   );
   const [selectedFarmers, setSelectedFarmers] = React.useState<string[]>([]);
-  const [status, setStauts] = React.useState<string>("");
+  const [status, setStatus] = React.useState<string>("");
   const [type, setType] = React.useState<string>("");
 
-  const statusData = [
-    { value: "in-stock", label: "In Stock" },
-    { value: "out-of-stock", label: "Out of Stock" },
-    { value: "low-stock", label: "Low Stock" },
-  ];
-  const productTypesData = [
-    { value: "regular", label: "Regular" },
-    { value: "subscription", label: "Subscription" },
-    { value: "preorder", label: "Preorder" },
-  ];
+  // Sync URL params to local state when dialog opens
+  React.useEffect(() => {
+    if (isOpen) {
+      setSelectedCategories(urlFilters.categoryIds);
+      setSelectedFarmers(urlFilters.farmerIds);
+      setStatus(urlFilters.status);
+      setType(urlFilters.type);
+    }
+  }, [isOpen, urlFilters]);
 
   const handleCategoriesChange = (value: string, checked: boolean) => {
     setSelectedCategories((prev) =>
@@ -52,9 +86,47 @@ const TableFilterDialog = () => {
       checked ? [...prev, value] : prev.filter((item) => item !== value)
     );
   };
+  const handleCategoryLimit = (type: "MORE" | "LESS") => {
+    if (type === "MORE") setCategoriesLimit((prev) => prev + 5);
+    if (type === "LESS") setCategoriesLimit(5);
+  };
+  const handleFarmerLimit = (type: "MORE" | "LESS") => {
+    if (type === "MORE") setFarmersLimit((prev) => prev + 5);
+    if (type === "LESS") setFarmersLimit(5);
+  };
 
+  // Apply filters to URL
+  const handleApplyFilters = () => {
+    setUrlFilters({
+      page: 1, // Always reset to page 1
+      categoryIds: selectedCategories.length > 0 ? selectedCategories : null,
+      farmerIds: selectedFarmers.length > 0 ? selectedFarmers : null,
+      status: status || null, // Remove from URL if empty
+      type: type || null, // Remove from URL if empty
+    });
+    setIsOpen(false); // Close dialog after applying
+  };
+  // Clear all filters
+  const handleClearFilters = () => {
+    // Clear local state
+    setSelectedCategories([]);
+    setSelectedFarmers([]);
+    setStatus("");
+    setType("");
+
+    // Clear URL params and reset to page 1
+    setUrlFilters({
+      page: 1,
+      categoryIds: null,
+      farmerIds: null,
+      status: null,
+      type: null,
+    });
+
+    setIsOpen(false); // Close dialog after clearing
+  };
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="font-secondary transition-all duration-300 flex items-center gap-x-1 text-sm  border-[1px] border-border px-3 hover:bg-gray-50  py-2 rounded-md cursor-pointer font-medium">
         <ListFilter className="size-5" /> Filters
       </DialogTrigger>{" "}
@@ -81,9 +153,12 @@ const TableFilterDialog = () => {
                 >
                   <Checkbox
                     id={category?.name}
-                    checked={selectedCategories.includes(category?.name)}
+                    checked={selectedCategories.includes(category?.categoryId)}
                     onCheckedChange={(checked) =>
-                      handleCategoriesChange(category?.name, checked === true)
+                      handleCategoriesChange(
+                        category?.categoryId,
+                        checked === true
+                      )
                     }
                     className="data-[state=checked]:bg-brand-100 border-brand-100 data-[state=checked]:border-brand-100"
                   />
@@ -96,6 +171,32 @@ const TableFilterDialog = () => {
                 </div>
               );
             })}
+          </div>
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              variant={"link"}
+              onClick={() => handleCategoryLimit("MORE")}
+              disabled={
+                categoriesLoading ||
+                categoriesFetching ||
+                categoriesData?.pagination?.hasNextPage === false
+              }
+              className={`font-secondary p-0 h-5 text-typography-75 pt-2 cursor-pointer float-right ${
+                categoriesData?.pagination?.hasNextPage === false && "hidden"
+              }`}
+            >
+              {categoriesFetching ? "Loading..." : " See More"}
+            </Button>
+            <Button
+              variant={"link"}
+              disabled={categoriesLoading || categoriesFetching}
+              onClick={() => handleCategoryLimit("LESS")}
+              className={`font-secondary p-0 h-5 text-typography-75 hidden pt-2 cursor-pointer float-right ${
+                categoriesData?.pagination?.hasNextPage === false && "block"
+              }`}
+            >
+              See Less
+            </Button>
           </div>
         </div>
         <Separator />
@@ -113,9 +214,9 @@ const TableFilterDialog = () => {
                 >
                   <Checkbox
                     id={farmer?.farmName}
-                    checked={selectedFarmers.includes(farmer?.farmName)}
+                    checked={selectedFarmers.includes(farmer?.farmerId)}
                     onCheckedChange={(checked) =>
-                      handleFarmersChange(farmer?.farmName, checked === true)
+                      handleFarmersChange(farmer?.farmerId, checked === true)
                     }
                     className="data-[state=checked]:bg-brand-100 border-brand-100 data-[state=checked]:border-brand-100"
                   />
@@ -129,6 +230,32 @@ const TableFilterDialog = () => {
               );
             })}
           </div>
+          <div className="flex gap-2 justify-end items-center">
+            <Button
+              variant={"link"}
+              disabled={
+                farmersLoading ||
+                farmersFetching ||
+                farmersData?.pagination?.hasNextPage === false
+              }
+              onClick={() => handleFarmerLimit("MORE")}
+              className={`font-secondary p-0 h-5 text-typography-75 pt-2 cursor-pointer float-right ${
+                farmersData?.pagination?.hasNextPage === false && "hidden"
+              }`}
+            >
+              {farmersFetching ? "Loading..." : " See More"}
+            </Button>
+            <Button
+              variant={"link"}
+              disabled={farmersLoading || farmersFetching}
+              onClick={() => handleFarmerLimit("LESS")}
+              className={`font-secondary p-0 h-5 text-typography-75 hidden pt-2 cursor-pointer float-right ${
+                farmersData?.pagination?.hasNextPage === false && "block"
+              }`}
+            >
+              See Less
+            </Button>
+          </div>
         </div>
         <Separator />
         {/* Status filter */}
@@ -138,7 +265,7 @@ const TableFilterDialog = () => {
           </h6>
           <RadioGroup
             value={status}
-            onValueChange={setStauts}
+            onValueChange={setStatus}
             className="flex gap-4 flex-wrap items-center"
           >
             {statusData.map((status) => (
@@ -190,12 +317,14 @@ const TableFilterDialog = () => {
         <div className="flex items-center mt-2  w-full sm:justify-end gap-2">
           <Button
             variant={"outline"}
+            onClick={handleClearFilters}
             className="cursor-pointer h-10 font-secondary sm:w-fit w-1/2"
           >
             <Link href={"/products"}> Reset Filters</Link>
           </Button>
           <Button
             variant={"outline"}
+            onClick={handleApplyFilters}
             className="cursor-pointer bg-brand-75 text-white hover:bg-brand-100 hover:text-white sm:w-fit w-1/2 min-w-[120px] h-10"
           >
             Apply Filters

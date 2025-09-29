@@ -1,8 +1,8 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { useQuery } from "@/hooks/use-query";
 import { Button } from "@/components/ui/button";
 import type { Table } from "@tanstack/react-table";
+import { useQueryStates, parseAsInteger } from "nuqs";
 import {
   ChevronLeft,
   ChevronRight,
@@ -32,24 +32,34 @@ export function DataTablePagination<TData>({
   className,
   ...props
 }: DataTablePaginationProps<TData>) {
-  // Current page & size from table
-  const pageIndex = table.getState().pagination.pageIndex;
-  const limit = table.getState().pagination.pageSize;
-
-  const query = React.useMemo(
-    () => ({
-      page: String(pageIndex + 1),
-      limit: String(limit),
-    }),
-    [pageIndex, limit]
-  );
-
-  useQuery({
-    query,
-    debounceMs: 0,
-    resetPageOn: ["search", "type", "name"],
+  // Get and set pagination via nuqs (URL state)
+  const [pagination, setPagination] = useQueryStates({
+    page: parseAsInteger.withDefault(1),
+    limit: parseAsInteger.withDefault(10),
   });
 
+  // Handlers for pagination actions
+  const handlePageChange = React.useCallback(
+    (newPage: number) => {
+      setPagination({ page: newPage });
+    },
+    [setPagination]
+  );
+
+  const handlePageSizeChange = React.useCallback(
+    (newLimit: number) => {
+      setPagination({
+        limit: newLimit,
+        page: 1, // Reset to page 1 when changing page size
+      });
+    },
+    [setPagination]
+  );
+
+  // Get current state from table
+  const currentPage = table.getState().pagination.pageIndex + 1;
+  const pageCount = table.getPageCount();
+  const pageSize = table.getState().pagination.pageSize;
   return (
     <div
       className={cn(
@@ -65,75 +75,83 @@ export function DataTablePagination<TData>({
       <div className="flex items-center space-x-2">
         <p className="whitespace-nowrap font-medium text-sm">Rows per page</p>
         <Select
-          value={`${table.getState().pagination.pageSize}`}
-          onValueChange={(value) => {
-            table.setPageSize(Number(value));
-          }}
+          value={`${pageSize}`}
+          onValueChange={(value) => handlePageSizeChange(Number(value))}
+          disabled={isLoading || isFetching}
         >
-          <SelectTrigger className="h-8 w-[4.5rem] [&[data-size]]:h-8">
-            <SelectValue placeholder={table.getState().pagination.pageSize} />
+          <SelectTrigger className="h-8 w-[4.5rem]">
+            <SelectValue placeholder={pageSize} />
           </SelectTrigger>
           <SelectContent side="top">
-            {pageSizeOptions.map((pageSize) => (
-              <SelectItem key={pageSize} value={`${pageSize}`}>
-                {pageSize}
+            {pageSizeOptions.map((size) => (
+              <SelectItem key={size} value={`${size}`}>
+                {size}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
-      <div className="flex flex-col-reverse  items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
-        <div
-          className="
-         sm:flex hidden items-center justify-center font-medium text-sm"
-        >
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
+
+      {/* Pagination controls */}
+      <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
+        {/* Page counter - Desktop */}
+        <div className="sm:flex hidden items-center justify-center font-medium text-sm">
+          Page {currentPage} of {pageCount || 1}
         </div>
+
+        {/* Navigation buttons */}
         <div className="flex items-center space-x-2">
+          {/* First page */}
           <Button
             aria-label="Go to first page"
             variant="outline"
             size="icon"
             className="hidden size-8 lg:flex"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage() || isLoading || isFetching}
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1 || isLoading || isFetching}
           >
-            <ChevronsLeft />
+            <ChevronsLeft className="size-4" />
           </Button>
+
+          {/* Previous page */}
           <Button
             aria-label="Go to previous page"
             variant="outline"
             size="icon"
             className="size-8"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage() || isLoading || isFetching}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1 || isLoading || isFetching}
           >
-            <ChevronLeft />
+            <ChevronLeft className="size-4" />
           </Button>
-          <div className="flex mx-2 px-2 sm:hidden  items-center justify-center font-medium text-sm">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
+
+          {/* Page counter - Mobile */}
+          <div className="flex mx-2 px-2 sm:hidden items-center justify-center font-medium text-sm">
+            Page {currentPage} of {pageCount || 1}
           </div>
+
+          {/* Next page */}
           <Button
             aria-label="Go to next page"
             variant="outline"
             size="icon"
             className="size-8"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage() || isLoading || isFetching}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= pageCount || isLoading || isFetching}
           >
-            <ChevronRight />
+            <ChevronRight className="size-4" />
           </Button>
+
+          {/* Last page */}
           <Button
             aria-label="Go to last page"
             variant="outline"
             size="icon"
             className="hidden size-8 lg:flex"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage() || isLoading || isFetching}
+            onClick={() => handlePageChange(pageCount)}
+            disabled={currentPage >= pageCount || isLoading || isFetching}
           >
-            <ChevronsRight />
+            <ChevronsRight className="size-4" />
           </Button>
         </div>
       </div>

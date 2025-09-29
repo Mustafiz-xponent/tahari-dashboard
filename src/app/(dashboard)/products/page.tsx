@@ -17,10 +17,10 @@ const Products = () => {
           </p>
         </div>
         {/* Add Product Button */}
-        <Link href={"/products/add"}>
+        <Link href={"/products/add"} className="self-end">
           <Button
             variant="outline"
-            className="h-11 w-fit self-end font-secondary rounded-sm cursor-pointer text-typography-5 hover:text-white bg-brand-100 hover:bg-btn-hover"
+            className="h-11 w-fit font-secondary rounded-sm cursor-pointer text-typography-5 hover:text-white bg-brand-100 hover:bg-btn-hover"
           >
             <Plus />
             <span>Add Product</span>

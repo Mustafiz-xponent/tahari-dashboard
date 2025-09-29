@@ -14,37 +14,46 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTablePagination } from "@/components/common/DataTablePagination";
-import { useSearchParams } from "next/navigation";
 import SearchInput from "@/app/(dashboard)/products/_components/SearchInput";
 import { DataTableSkeleton } from "@/components/common/DataTableSkeleton";
 import { Columns } from "@/app/(dashboard)/products/_components/Columns";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetAllProductsQuery } from "@/redux/services/productsApi";
-import { useQuery } from "@/hooks/use-query";
 import TableFilterDialog from "@/app/(dashboard)/products/_components/TableFilterDialog";
+import { useQueryStates, parseAsInteger, parseAsString } from "nuqs";
 
+const VALID_TYPES = ["regular", "subscription", "preorder"] as const;
+type ProductType = (typeof VALID_TYPES)[number];
 export function DataTable() {
-  const searchParams = useSearchParams();
+  const [filters, setFilters] = useQueryStates({
+    name: parseAsString.withDefault(""),
+    limit: parseAsInteger.withDefault(10),
+    page: parseAsInteger.withDefault(1),
+    type: parseAsString.withDefault("regular"),
+    status: parseAsString.withDefault(""),
+    categoryIds: parseAsString.withDefault(""),
+    farmerIds: parseAsString.withDefault(""),
+  });
 
-  const initialType = ["subscription", "preorder"].includes(
-    searchParams.get("type") ?? ""
-  )
-    ? searchParams.get("type")!
+  // Validate and get current type
+  const currentType = VALID_TYPES.includes(filters.type as ProductType)
+    ? filters.type
     : "regular";
 
-  const [type, setType] = React.useState<string>(initialType);
-
-  const name = searchParams.get("name")?.trim() ?? "";
-  const limit = Number(searchParams.get("limit") ?? 10);
-  const page = Number(searchParams.get("page") ?? 1);
-
-  const query = {
-    name,
-    limit,
-    page,
-    isSubscription: type === "subscription",
-    isPreorder: type === "preorder",
-  };
+  // Build query for API
+  const query = React.useMemo(
+    () => ({
+      name: filters.name.trim(),
+      limit: filters.limit,
+      page: filters.page,
+      isSubscription: currentType === "subscription",
+      isPreorder: currentType === "preorder",
+      status: filters.status,
+      categoryIds: filters.categoryIds,
+      farmerIds: filters.farmerIds,
+    }),
+    [filters, currentType]
+  );
 
   const { data, isLoading, isFetching } = useGetAllProductsQuery(query);
 
@@ -58,40 +67,43 @@ export function DataTable() {
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
     getRowId: (originalRow) => originalRow?.productId,
-    initialState: {
+    state: {
       pagination: {
-        pageIndex: Number(page) - 1,
-        pageSize: Number(limit),
+        pageIndex: filters.page - 1,
+        pageSize: filters.limit,
       },
     },
+    onPaginationChange: (updater) => {
+      if (typeof updater === "function") {
+        const newPagination = updater({
+          pageIndex: filters.page - 1,
+          pageSize: filters.limit,
+        });
+        setFilters({
+          page: newPagination.pageIndex + 1,
+          limit: newPagination.pageSize,
+        });
+      }
+    },
   });
-  // update table pagination state when query params change
-  React.useEffect(() => {
-    table.setPageIndex(Number(page) - 1);
-    table.setPageSize(Number(limit));
-  }, [table, page, limit]);
-
-  // update query params when product type change
-  const typeQuery = React.useMemo(
-    () => ({
-      type: type,
-    }),
-    [type]
+  // Handle product type change (tabs)
+  const handleTypeChange = React.useCallback(
+    (newType: string) => {
+      setFilters({
+        type: newType,
+        page: 1, // Reset to page 1 when type changes
+      });
+    },
+    [setFilters]
   );
-
-  useQuery({
-    query: typeQuery,
-    debounceMs: 0,
-    resetPageOn: ["type"],
-  });
 
   return (
     <>
       <Tabs
         defaultValue="regular"
         className="w-full"
-        value={type}
-        onValueChange={(value) => setType(value)}
+        value={currentType}
+        onValueChange={handleTypeChange}
       >
         <TabsList className="w-full p-0 h-11 px-1 font-secondary bg-brand-10">
           <TabsTrigger value="regular" className="cursor-pointer h-9 text-sm">
@@ -107,7 +119,7 @@ export function DataTable() {
       </Tabs>
 
       <div className="w-full border rounded-lg p-6 bg-white">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2 justify-between mb-4">
           <SearchInput />
           <TableFilterDialog />
         </div>

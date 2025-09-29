@@ -1,28 +1,45 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Input } from "@/components/ui/input";
-import { useSearchParams } from "next/navigation";
-import { useQuery } from "@/hooks/use-query";
+import { useQueryStates, parseAsString, parseAsInteger } from "nuqs";
+import { useDebouncedCallback } from "use-debounce";
 
 const SearchInput = () => {
-  const searchParams = useSearchParams();
-  const [value, setValue] = useState<string>(searchParams.get("name") ?? "");
-
-  const query = React.useMemo(() => ({ name: value }), [value]);
-  useQuery({
-    query,
-    resetPageOn: ["name"],
+  // Get current filters from URL
+  const [filters, setFilters] = useQueryStates({
+    name: parseAsString.withDefault(""),
+    page: parseAsInteger.withDefault(1),
   });
 
+  // Local state for immediate input feedback (better UX)
+  const [inputValue, setInputValue] = React.useState(filters.name);
+
+  // Sync local state with URL when URL changes externally
+  React.useEffect(() => {
+    setInputValue(filters.name);
+  }, [filters.name]);
+
+  // Debounced function to update URL (prevents too many updates while typing)
+  const debouncedUpdate = useDebouncedCallback((value: string) => {
+    setFilters({
+      name: value.trim() || null, // Remove from URL if empty
+      page: 1, // Reset to page 1 when searching
+    });
+  }, 500); // 500ms delay
+
+  // Handle input change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue); // Update immediately for smooth typing
+    debouncedUpdate(newValue); // Update URL after delay
+  };
   return (
-    <div className="flex items-center">
-      <Input
-        placeholder="Search Products..."
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        className="max-w-sm h-10 text-sm border-border focus-visible:border-border focus-visible:ring-0 font-secondary "
-      />
-    </div>
+    <Input
+      placeholder="Search Products..."
+      value={inputValue}
+      onChange={handleChange}
+      className="max-w-sm h-10 text-sm border-border focus-visible:border-border focus-visible:ring-0 font-secondary "
+    />
   );
 };
 
