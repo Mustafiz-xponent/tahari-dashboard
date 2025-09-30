@@ -19,12 +19,13 @@ import {
   useCreatePromotionMutation,
   useUpdatePromotionMutation,
 } from "@/redux/services/promotionApi";
-import { createPromotionSchema } from "@/lib/validations/promotionSchema";
+import {
+  createPromotionSchema,
+  updatePromotionSchema,
+} from "@/lib/validations/promotionSchema";
 import { SwitchField } from "@/components/common/form/SwitchField";
 import { useGetAllProductsQuery } from "@/redux/services/productsApi";
-import { useGetAllDealsQuery } from "@/redux/services/dealsApi";
 import { Product } from "@/types/product";
-import { Deal } from "@/types/deal";
 
 interface PromotionFormProps {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -41,9 +42,7 @@ const promoPlacementOptions = Object.values(PromoPlacement).map((unit) => ({
 const PromotionForm = ({ setDialogOpen, initialData }: PromotionFormProps) => {
   const { data: productsData, isLoading: productsLoading } =
     useGetAllProductsQuery({});
-  const { data: dealsData, isLoading: dealsLoading } = useGetAllDealsQuery({});
-  console.log("PRODUCT_DATA:", productsData);
-  console.log("DEAL_DATA:", dealsData);
+
   const [createPromotionHandler, { isLoading: isCreating }] =
     useCreatePromotionMutation();
   const [updatePromotionHandler, { isLoading: isUpdating }] =
@@ -51,19 +50,19 @@ const PromotionForm = ({ setDialogOpen, initialData }: PromotionFormProps) => {
 
   const promotionId = initialData?.promotionId;
   const mode = promotionId ? "EDIT" : "CREATE";
-
-  const form = useForm<z.infer<typeof createPromotionSchema>>({
-    resolver: zodResolver(createPromotionSchema),
+  const formSchema =
+    mode === "EDIT" ? updatePromotionSchema : createPromotionSchema;
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       title: "",
       description: "",
       targetType: undefined,
-      productId: "",
-      dealId: "",
+      productId: undefined,
       placement: undefined,
       priority: "",
       isActive: false,
-      image: "",
+      image: undefined,
     },
     mode: "onChange",
   });
@@ -72,15 +71,19 @@ const PromotionForm = ({ setDialogOpen, initialData }: PromotionFormProps) => {
     label: product?.name,
     value: product?.productId,
   }));
-  const dealsOptions = dealsData?.data?.map((deal: Deal) => ({
-    label: deal?.title,
-    value: deal?.dealId,
-  }));
-  async function onSubmit(data: z.infer<typeof createPromotionSchema>) {
+
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     const formData = new FormData();
-    // formData.append("image", data.image);
-    // formData.append("name", data?.name ?? "");
-    // formData.append("description", data?.description ?? "");
+    Object.entries(data).forEach(([key, value]) => {
+      if (value === undefined || value === null) return;
+      if (value instanceof File) {
+        formData.append(key, value, value.name);
+      } else if (typeof value === "boolean") {
+        formData.append(key, String(value));
+      } else {
+        formData.append(key, String(value));
+      }
+    });
 
     try {
       let response;
@@ -125,14 +128,26 @@ const PromotionForm = ({ setDialogOpen, initialData }: PromotionFormProps) => {
           rows={20}
           inputClassName="min-h-[100px] py-3 resize-none"
         />
-        <InputField
-          control={form.control}
-          name="priority"
-          label="Priority"
-          type="number"
-          placeholder="Enter priority"
-          info="When several promotions are active, promotions with lower priority numbers appear first."
-        />
+        <div className="grid grid-cols-1 items-start sm:grid-cols-2 gap-4">
+          <InputField
+            control={form.control}
+            name="priority"
+            label="Priority"
+            type="number"
+            placeholder="Enter priority"
+            info="When several promotions are active, promotions with lower priority numbers appear first."
+          />
+          <SelectField
+            control={form.control}
+            name="productId"
+            label="Product"
+            placeholder="Select a Product"
+            inputClassName="w-full h-11"
+            isDataLoading={productsLoading}
+            options={productsOptions}
+            info="Select the specific product this promotion is linked to. If left blank, the promotion may apply more broadly (depending on the target type)."
+          />
+        </div>
         <div className="grid grid-cols-1 items-start sm:grid-cols-2 gap-4">
           <SelectField
             control={form.control}
@@ -141,7 +156,7 @@ const PromotionForm = ({ setDialogOpen, initialData }: PromotionFormProps) => {
             placeholder="Select target type"
             inputClassName="w-full h-11"
             isDataLoading={false}
-            info={`Specifies what this promotion applies to (e.g., product, deal, or subscription plan). Select the correct scope to ensure the promotion is applied properly.`}
+            info={`Specifies what this promotion applies to (e.g., product, or subscription plan). Select the correct scope to ensure the promotion is applied properly.`}
             options={promoTargetTypeOptions}
           />
           <SelectField
@@ -155,27 +170,7 @@ const PromotionForm = ({ setDialogOpen, initialData }: PromotionFormProps) => {
             options={promoPlacementOptions}
           />
         </div>
-        <div className="grid items-start grid-cols-1 sm:grid-cols-2 gap-4">
-          <SelectField
-            control={form.control}
-            name="productId"
-            label="Product"
-            placeholder="Select a Product"
-            inputClassName="w-full h-11"
-            isDataLoading={productsLoading}
-            options={productsOptions}
-            info="Select the specific product this promotion is linked to. If left blank, the promotion may apply more broadly (depending on the target type)."
-          />
-          <SelectField
-            control={form.control}
-            name="dealId"
-            label="Deal"
-            placeholder="Select a dealId"
-            inputClassName="w-full h-11"
-            isDataLoading={dealsLoading}
-            options={dealsOptions}
-          />
-        </div>
+
         <SwitchField
           control={form.control}
           name="isActive"
@@ -183,6 +178,7 @@ const PromotionForm = ({ setDialogOpen, initialData }: PromotionFormProps) => {
           description="Toggle ON to show the promotion, OFF to hide it"
           info="Controls whether the promotion is currently live. Toggle ON to make it visible and available to customers, or OFF to pause it without deleting."
         />
+
         <FileField
           control={form.control}
           name="image"
@@ -210,7 +206,7 @@ const PromotionForm = ({ setDialogOpen, initialData }: PromotionFormProps) => {
             </Button>
           </DialogClose>
           <FormSubmitBtn
-            text={mode === "EDIT" ? "Update Promotion" : "Create Promotion"}
+            text={mode === "EDIT" ? "Update Promotion" : "Add Promotion"}
             isLoading={isCreating || isUpdating}
             className="sm:w-fit w-1/2 min-w-[120px] h-10"
             spinnerSize={23}

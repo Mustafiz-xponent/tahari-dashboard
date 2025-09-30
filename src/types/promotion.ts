@@ -1,7 +1,5 @@
 export enum PromoTargetType {
   PRODUCT = "PRODUCT",
-  DEAL = "DEAL",
-  PREORDER = "PREORDER",
   SUBSCRIPTION_PLAN = "SUBSCRIPTION_PLAN",
 }
 export enum PromoPlacement {

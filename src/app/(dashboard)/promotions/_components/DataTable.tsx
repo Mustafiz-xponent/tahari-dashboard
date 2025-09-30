@@ -13,12 +13,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetAllFarmersQuery } from "@/redux/services/farmersApi";
 import { DataTablePagination } from "@/components/common/DataTablePagination";
-import { Columns } from "@/app/(dashboard)/farmers/_components/Columns";
+import SearchInput from "@/components/common/SearchInput";
 import { DataTableSkeleton } from "@/components/common/DataTableSkeleton";
 import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
-import SearchInput from "@/components/common/SearchInput";
+import { useGetAllPromotionsQuery } from "@/redux/services/promotionApi";
+import { Columns } from "@/app/(dashboard)/promotions/_components/Columns";
 
 export function DataTable() {
   const [filters, setFilters] = useQueryStates({
@@ -36,19 +36,18 @@ export function DataTable() {
     }),
     [filters]
   );
+  const { data, isLoading, isFetching } = useGetAllPromotionsQuery(query);
 
-  const { data, isLoading, isFetching } = useGetAllFarmersQuery(query);
-
-  const farmers = data?.data ?? [];
+  const promotions = data?.data ?? [];
   const pageCount = data?.pagination?.totalPages ?? 0;
 
   const table = useReactTable({
-    data: farmers,
+    data: promotions,
     columns: Columns,
     pageCount,
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
-    getRowId: (originalRow) => originalRow.farmerId,
+    getRowId: (originalRow) => originalRow.promotionId,
     state: {
       pagination: {
         pageIndex: filters.page - 1,
@@ -71,7 +70,7 @@ export function DataTable() {
 
   return (
     <div className="w-full border rounded-lg p-6 bg-white">
-      <SearchInput placeholder="Search Farm's..." />
+      <SearchInput placeholder="Search..." /> {/* Search input */}
       <div className="overflow-hidden rounded-md border">
         {isLoading || isFetching ? (
           <DataTableSkeleton
@@ -81,14 +80,14 @@ export function DataTable() {
             withViewOptions={false}
           />
         ) : (
-          <Table>
+          <Table className="w-full ">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="py-3.5 font-secondary text-typography-50 first:px-5"
+                      className="py-3.5  font-secondary text-typography-50 first:px-5"
                     >
                       {flexRender(
                         header.column.columnDef.header,
@@ -100,11 +99,11 @@ export function DataTable() {
               ))}
             </TableHeader>
             <TableBody>
-              {farmers.length ? (
+              {promotions?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id}>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="py-4 font-secondary">
+                      <TableCell key={cell.id} className="py-2  font-secondary">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()

@@ -8,9 +8,11 @@ import { twMerge } from "tailwind-merge";
 const SearchInput = ({
   className,
   queryName = "search",
+  placeholder = "Search...",
 }: {
   className?: string;
   queryName?: string;
+  placeholder?: string;
 }) => {
   const [query, setQuery] = useQueryState(
     queryName,
@@ -41,7 +43,7 @@ const SearchInput = ({
 
   return (
     <Input
-      placeholder="Search Farm's..."
+      placeholder={placeholder}
       value={inputValue}
       onChange={handleChange}
       className={twMerge(

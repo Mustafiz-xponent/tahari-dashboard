@@ -70,7 +70,7 @@ export function DataTable() {
 
   return (
     <div className="w-full border rounded-lg p-6 bg-white">
-      <SearchInput /> {/* Search input */}
+      <SearchInput placeholder="Search Categories..." /> {/* Search input */}
       <div className="overflow-hidden rounded-md border">
         {isLoading || isFetching ? (
           <DataTableSkeleton

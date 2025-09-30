@@ -29,6 +29,7 @@ export const promotionApi = createApi({
         if (search) params.append("search", search);
         if (limit) params.append("limit", limit);
         if (page) params.append("page", page);
+        params.append("status", "all");
 
         return {
           url: `/api/promotions`,

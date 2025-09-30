@@ -124,7 +124,11 @@ export function DataTable() {
 
       <div className="w-full border rounded-lg p-6 bg-white">
         <div className="flex items-center gap-2 justify-between mb-4">
-          <SearchInput queryName="name" className="mb-0" />
+          <SearchInput
+            queryName="name"
+            className="mb-0"
+            placeholder="Search Product's..."
+          />
           <div className="flex items-center gap-2">
             <Button
               variant={"outline"}

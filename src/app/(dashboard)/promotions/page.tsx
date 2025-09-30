@@ -1,4 +1,5 @@
 import React from "react";
+import { DataTable } from "@/app/(dashboard)/promotions/_components/DataTable";
 import AddPromoDialog from "@/app/(dashboard)/promotions/_components/AddPromoDialog";
 
 const Promotions = () => {
@@ -17,7 +18,7 @@ const Promotions = () => {
         <AddPromoDialog />
       </header>
       {/* Promotions list table */}
-      {/* <DataTable /> */}
+      <DataTable />
     </div>
   );
 };

@@ -75,6 +75,19 @@ const AddProductForm = () => {
     }
   }, [isSubscription, form]);
 
+  const productUnitTypeOptions = Object.values(ProductUnitType).map((unit) => ({
+    label: unit,
+    value: unit,
+  }));
+  const categoryOptions = categoryData?.data?.map((cat: Category) => ({
+    label: cat?.name,
+    value: cat?.categoryId,
+  }));
+  const farmerOptions = farmerData?.data?.map((farmer: Farmer) => ({
+    label: farmer?.name,
+    value: farmer?.farmerId,
+  }));
+
   async function onSubmit(data: z.infer<typeof createProductSchema>) {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
@@ -107,18 +120,6 @@ const AddProductForm = () => {
       toast.error(error?.data?.error?.message || "Something went wrong.");
     }
   }
-  const productUnitTypeOptions = Object.values(ProductUnitType).map((unit) => ({
-    label: unit,
-    value: unit,
-  }));
-  const categoryOptions = categoryData?.data?.map((cat: Category) => ({
-    label: cat?.name,
-    value: cat?.categoryId,
-  }));
-  const farmerOptions = farmerData?.data?.map((farmer: Farmer) => ({
-    label: farmer?.name,
-    value: farmer?.farmerId,
-  }));
 
   return (
     <Form {...form}>
