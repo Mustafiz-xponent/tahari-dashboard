@@ -33,7 +33,7 @@ export function DataTablePagination<TData>({
   ...props
 }: DataTablePaginationProps<TData>) {
   // Get and set pagination via nuqs (URL state)
-  const [pagination, setPagination] = useQueryStates({
+  const [, setPagination] = useQueryStates({
     page: parseAsInteger.withDefault(1),
     limit: parseAsInteger.withDefault(10),
   });

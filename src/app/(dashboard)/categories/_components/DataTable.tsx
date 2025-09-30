@@ -14,19 +14,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTablePagination } from "@/components/common/DataTablePagination";
-import { useSearchParams } from "next/navigation";
-import SearchInput from "@/app/(dashboard)/categories/_components/SearchInput";
+import SearchInput from "@/components/common/SearchInput";
 import { DataTableSkeleton } from "@/components/common/DataTableSkeleton";
 import { useGetAllCategoriesQuery } from "@/redux/services/categoriesApi";
 import { Columns } from "@/app/(dashboard)/categories/_components/Columns";
+import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 
 export function DataTable() {
-  const searchParams = useSearchParams();
-  const search = searchParams.get("search") ?? "";
-  const limit = searchParams.get("limit") ?? "10";
-  const page = searchParams.get("page") ?? "1";
+  const [filters, setFilters] = useQueryStates({
+    search: parseAsString.withDefault(""),
+    limit: parseAsInteger.withDefault(10),
+    page: parseAsInteger.withDefault(1),
+  });
 
-  const query = { search, limit, page };
+  // Build query for API
+  const query = React.useMemo(
+    () => ({
+      search: filters.search.trim(),
+      limit: filters.limit,
+      page: filters.page,
+    }),
+    [filters]
+  );
   const { data, isLoading, isFetching } = useGetAllCategoriesQuery(query);
 
   const categories = data?.data ?? [];
@@ -39,18 +48,25 @@ export function DataTable() {
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
     getRowId: (originalRow) => originalRow.categoryId,
-    initialState: {
+    state: {
       pagination: {
-        pageIndex: Number(page) - 1,
-        pageSize: Number(limit),
+        pageIndex: filters.page - 1,
+        pageSize: filters.limit,
       },
     },
+    onPaginationChange: (updater) => {
+      if (typeof updater === "function") {
+        const newPagination = updater({
+          pageIndex: filters.page - 1,
+          pageSize: filters.limit,
+        });
+        setFilters({
+          page: newPagination.pageIndex + 1,
+          limit: newPagination.pageSize,
+        });
+      }
+    },
   });
-  // update table pagination state when query params change
-  React.useEffect(() => {
-    table.setPageIndex(Number(page) - 1);
-    table.setPageSize(Number(limit));
-  }, [table, page, limit]);
 
   return (
     <div className="w-full border rounded-lg p-6 bg-white">

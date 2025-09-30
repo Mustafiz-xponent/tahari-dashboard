@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTablePagination } from "@/components/common/DataTablePagination";
-import SearchInput from "@/app/(dashboard)/products/_components/SearchInput";
+import SearchInput from "@/components/common/SearchInput";
 import { DataTableSkeleton } from "@/components/common/DataTableSkeleton";
 import { Columns } from "@/app/(dashboard)/products/_components/Columns";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -124,7 +124,7 @@ export function DataTable() {
 
       <div className="w-full border rounded-lg p-6 bg-white">
         <div className="flex items-center gap-2 justify-between mb-4">
-          <SearchInput />
+          <SearchInput queryName="name" className="mb-0" />
           <div className="flex items-center gap-2">
             <Button
               variant={"outline"}

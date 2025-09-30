@@ -16,17 +16,27 @@ import {
 import { useGetAllFarmersQuery } from "@/redux/services/farmersApi";
 import { DataTablePagination } from "@/components/common/DataTablePagination";
 import { Columns } from "@/app/(dashboard)/farmers/_components/Columns";
-import { useSearchParams } from "next/navigation";
-import SearchInput from "@/app/(dashboard)/farmers/_components/SearchInput";
 import { DataTableSkeleton } from "@/components/common/DataTableSkeleton";
+import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
+import SearchInput from "@/components/common/SearchInput";
 
 export function DataTable() {
-  const searchParams = useSearchParams();
-  const search = searchParams.get("search") ?? "";
-  const limit = searchParams.get("limit") ?? "10";
-  const page = searchParams.get("page") ?? "1";
+  const [filters, setFilters] = useQueryStates({
+    search: parseAsString.withDefault(""),
+    limit: parseAsInteger.withDefault(10),
+    page: parseAsInteger.withDefault(1),
+  });
 
-  const query = { search, limit, page };
+  // Build query for API
+  const query = React.useMemo(
+    () => ({
+      search: filters.search.trim(),
+      limit: filters.limit,
+      page: filters.page,
+    }),
+    [filters]
+  );
+
   const { data, isLoading, isFetching } = useGetAllFarmersQuery(query);
 
   const farmers = data?.data ?? [];
@@ -39,22 +49,29 @@ export function DataTable() {
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
     getRowId: (originalRow) => originalRow.farmerId,
-    initialState: {
+    state: {
       pagination: {
-        pageIndex: Number(page) - 1,
-        pageSize: Number(limit),
+        pageIndex: filters.page - 1,
+        pageSize: filters.limit,
       },
     },
+    onPaginationChange: (updater) => {
+      if (typeof updater === "function") {
+        const newPagination = updater({
+          pageIndex: filters.page - 1,
+          pageSize: filters.limit,
+        });
+        setFilters({
+          page: newPagination.pageIndex + 1,
+          limit: newPagination.pageSize,
+        });
+      }
+    },
   });
-  // update table pagination state when query params change
-  React.useEffect(() => {
-    table.setPageIndex(Number(page) - 1);
-    table.setPageSize(Number(limit));
-  }, [table, page, limit]);
 
   return (
     <div className="w-full border rounded-lg p-6 bg-white">
-      <SearchInput /> {/* Search input */}
+      <SearchInput />
       <div className="overflow-hidden rounded-md border">
         {isLoading || isFetching ? (
           <DataTableSkeleton
