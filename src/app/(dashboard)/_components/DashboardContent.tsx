@@ -54,12 +54,16 @@ const DashboardContent = () => {
               value={selectedYear}
               onValueChange={(value) => setSelectedYear(value)}
             >
-              <SelectTrigger className="w-[180px] self-end focus-visible:border-border focus-visible:ring-0">
+              <SelectTrigger className="w-[180px] self-end font-secondary focus-visible:border-border focus-visible:ring-0">
                 <SelectValue placeholder="Filter by year" />
               </SelectTrigger>
               <SelectContent>
                 {yearOptions.map((year) => (
-                  <SelectItem key={year} value={year.toString()}>
+                  <SelectItem
+                    key={year}
+                    value={year.toString()}
+                    className="font-secondary"
+                  >
                     {year}
                   </SelectItem>
                 ))}

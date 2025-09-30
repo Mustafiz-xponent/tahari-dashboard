@@ -1,5 +1,4 @@
 "use client";
-
 import { Textarea } from "@/components/ui/textarea";
 import {
   FormControl,
@@ -52,7 +51,7 @@ export function TextAreaField<TFieldValues extends FieldValues>({
               rows={rows}
               {...field}
               className={twMerge(
-                `pl-4 border-border placeholder:text-sm  text-sm font-primary focus-visible:border-border focus-visible:ring-0 transition-smooth`,
+                `pl-4 border-border min-h-[100px] max-h-[200px] overflow-y-auto  placeholder:text-sm  text-sm font-primary focus-visible:border-border focus-visible:ring-0 transition-smooth`,
                 inputClassName
               )}
             />
