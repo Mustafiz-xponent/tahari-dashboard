@@ -27,7 +27,6 @@ const TableAction = ({ data }: { data: Promotion }) => {
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
         <DropdownMenuItem asChild>
           <EditPromotionDialog promotion={data} />
         </DropdownMenuItem>

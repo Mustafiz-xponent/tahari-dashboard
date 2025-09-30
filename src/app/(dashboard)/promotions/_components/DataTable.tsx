@@ -19,12 +19,20 @@ import { DataTableSkeleton } from "@/components/common/DataTableSkeleton";
 import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { useGetAllPromotionsQuery } from "@/redux/services/promotionApi";
 import { Columns } from "@/app/(dashboard)/promotions/_components/Columns";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function DataTable() {
   const [filters, setFilters] = useQueryStates({
     search: parseAsString.withDefault(""),
     limit: parseAsInteger.withDefault(10),
     page: parseAsInteger.withDefault(1),
+    status: parseAsString.withDefault(""),
   });
 
   // Build query for API
@@ -33,6 +41,7 @@ export function DataTable() {
       search: filters.search.trim(),
       limit: filters.limit,
       page: filters.page,
+      status: filters.status.toLowerCase(),
     }),
     [filters]
   );
@@ -69,8 +78,27 @@ export function DataTable() {
   });
 
   return (
-    <div className="w-full border rounded-lg p-6 bg-white">
-      <SearchInput placeholder="Search..." /> {/* Search input */}
+    <div className="w-full border  rounded-lg p-6 bg-white">
+      <div className="flex items-center  gap-2 justify-between mb-4">
+        <SearchInput placeholder="Search..." className="mb-0" />{" "}
+        {/* Search input */}
+        <Select
+          value={filters.status}
+          onValueChange={(value) => setFilters({ status: value })}
+        >
+          <SelectTrigger className="w-[180px] py-[19px] self-end focus-visible:border-border focus-visible:ring-0">
+            <SelectValue placeholder="Filter by status" />
+          </SelectTrigger>
+          <SelectContent>
+            {["All", "Active", "Inactive"].map((status) => (
+              <SelectItem key={status} value={status} className="capitalize">
+                {status}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       <div className="overflow-hidden rounded-md border">
         {isLoading || isFetching ? (
           <DataTableSkeleton

@@ -24,12 +24,12 @@ export const promotionApi = createApi({
     }),
 
     getAllPromotions: builder.query({
-      query: ({ search, limit, page }) => {
+      query: ({ search, limit, page, status }) => {
         const params = new URLSearchParams();
         if (search) params.append("search", search);
         if (limit) params.append("limit", limit);
         if (page) params.append("page", page);
-        params.append("status", "all");
+        params.append("status", status ? status : "all");
 
         return {
           url: `/api/promotions`,

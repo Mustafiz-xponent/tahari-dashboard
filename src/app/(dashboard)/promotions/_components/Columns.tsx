@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Promotion } from "@/types/promotion";
 import { ColumnDef } from "@tanstack/react-table";
 import AppImage from "@/components/common/AppImage";
@@ -28,7 +29,11 @@ export const Columns: ColumnDef<Promotion>[] = [
     header: ({}) => {
       return <div className="font-secondary">Title</div>;
     },
-    cell: ({ row }) => <div>{row.getValue("title")}</div>,
+    cell: ({ row }) => (
+      <div className="max-w-[200px] text-ellipsis whitespace-nowrap overflow-hidden">
+        {row.getValue("title")}
+      </div>
+    ),
   },
   {
     accessorKey: "description",
@@ -53,7 +58,18 @@ export const Columns: ColumnDef<Promotion>[] = [
     header: () => <div>Status</div>,
     cell: ({ row }) => {
       const status = row.getValue("isActive") ? "Active" : "Inactive";
-      return <div>{status}</div>;
+      const badgeClasses = row.getValue("isActive")
+        ? "bg-green-100 border-green-200 text-green-800"
+        : "bg-red-100 border-red-200 text-red-800";
+      return (
+        <div>
+          <Badge
+            className={`${badgeClasses} rounded-sm text-xs font-secondary `}
+          >
+            {status}
+          </Badge>
+        </div>
+      );
     },
   },
   {
