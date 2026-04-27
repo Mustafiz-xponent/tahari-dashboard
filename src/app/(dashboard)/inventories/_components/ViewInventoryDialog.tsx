@@ -102,7 +102,7 @@ export function ViewInventoryDialog({
                 Unit Cost
               </h4>
               <p className="text-base">
-                ${Number(inventory.unitCost).toFixed(2)}
+                ৳{Number(inventory.unitCost).toFixed(2)}
               </p>
             </div>
             <div>
@@ -110,7 +110,7 @@ export function ViewInventoryDialog({
                 Total Cost
               </h4>
               <p className="text-base font-semibold">
-                ${Number(inventory.totalCost).toFixed(2)}
+                ৳{Number(inventory.totalCost).toFixed(2)}
               </p>
             </div>
           </div>

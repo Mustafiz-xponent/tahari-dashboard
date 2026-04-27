@@ -34,7 +34,7 @@ export function DataTable() {
       limit: filters.limit,
       page: filters.page,
     }),
-    [filters]
+    [filters],
   );
 
   const { data, isLoading, isFetching } = useGetAllInventoriesQuery(query);
@@ -57,7 +57,7 @@ export function DataTable() {
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <SearchInput placeholder="Search inventories..." />
+        <SearchInput placeholder="Search inventories by product name, farmer name, and notes...." />
       </div>
       <div className="rounded-md border">
         <Table>
@@ -71,7 +71,7 @@ export function DataTable() {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -90,7 +90,7 @@ export function DataTable() {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

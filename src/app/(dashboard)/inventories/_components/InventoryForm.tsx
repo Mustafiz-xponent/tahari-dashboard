@@ -240,7 +240,7 @@ export function InventoryForm({ inventory, onSuccess }: InventoryFormProps) {
             name="unitCost"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Unit Cost ($)</FormLabel>
+                <FormLabel>Unit Cost (৳)</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -262,7 +262,7 @@ export function InventoryForm({ inventory, onSuccess }: InventoryFormProps) {
             name="totalCost"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Total Cost ($)</FormLabel>
+                <FormLabel>Total Cost (৳)</FormLabel>
                 <FormControl>
                   <Input
                     type="number"

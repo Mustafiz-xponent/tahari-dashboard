@@ -151,7 +151,7 @@ export const Columns: ColumnDef<InventoryPurchase>[] = [
     header: () => <div>Unit Cost</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("unitCost"));
-      return <div>${amount.toFixed(2)}</div>;
+      return <div>৳{amount.toFixed(2)}</div>;
     },
   },
   {
@@ -169,7 +169,7 @@ export const Columns: ColumnDef<InventoryPurchase>[] = [
     },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("totalCost"));
-      return <div className="font-semibold">${amount.toFixed(2)}</div>;
+      return <div className="font-semibold">৳{amount.toFixed(2)}</div>;
     },
   },
   {
