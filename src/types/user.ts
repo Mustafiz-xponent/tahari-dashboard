@@ -20,3 +20,12 @@ export interface User {
   address: string[];
   status: UserStatus;
 }
+
+export interface Customer {
+  customerId: number;
+  userId: number;
+  user: User;
+  orders: object[];
+  subscriptions: object[];
+  wallet: object;
+}

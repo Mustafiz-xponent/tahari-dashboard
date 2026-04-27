@@ -7,6 +7,11 @@ import { productsApi } from "@/redux/services/productsApi";
 import { dashboardApi } from "@/redux/services/dashboardApi";
 import { promotionApi } from "@/redux/services/promotionApi";
 import { categoriesApi } from "@/redux/services/categoriesApi";
+import { subscriptionsApi } from "@/redux/services/subscriptionsApi";
+import { inventoriesApi } from "@/redux/services/inventoriesApi";
+import { customersApi } from "@/redux/services/customersApi";
+import { ordersApi } from "@/redux/services/ordersApi";
+import { orderTrackingsApi } from "@/redux/services/orderTrackingsApi";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import { PersistConfig, persistReducer, persistStore } from "redux-persist";
@@ -41,6 +46,11 @@ const rootReducer = combineReducers({
   [productsApi.reducerPath]: productsApi.reducer,
   [promotionApi.reducerPath]: promotionApi.reducer,
   [dealsApi.reducerPath]: dealsApi.reducer,
+  [subscriptionsApi.reducerPath]: subscriptionsApi.reducer,
+  [inventoriesApi.reducerPath]: inventoriesApi.reducer,
+  [customersApi.reducerPath]: customersApi.reducer,
+  [ordersApi.reducerPath]: ordersApi.reducer,
+  [orderTrackingsApi.reducerPath]: orderTrackingsApi.reducer,
 });
 
 // Define the persist config type
@@ -63,7 +73,12 @@ const store = configureStore({
       categoriesApi.middleware,
       productsApi.middleware,
       promotionApi.middleware,
-      dealsApi.middleware
+      dealsApi.middleware,
+      subscriptionsApi.middleware,
+      inventoriesApi.middleware,
+      customersApi.middleware,
+      ordersApi.middleware,
+      orderTrackingsApi.middleware
     ),
 });
 
