@@ -44,19 +44,36 @@ export default function LoginForm() {
       password: "",
     },
   });
+  // async function onSubmit(formData: z.infer<typeof loginSchema>) {
+  //   try {
+  //     const response = await loginHandler(formData).unwrap();
+  //     router.push("/");
+  //     dispatch(setUser(response?.data));
+  //     const successMessage = response?.message || "Login successful.";
+  //     toast.success(successMessage);
+  //     form.reset();
+  //   } catch (err: unknown) {
+  //     const error = err as IApiError;
+  //     const errorMessage =
+  //       error?.data?.error?.message || "Something went wrong.";
+  //     toast.error(errorMessage);
+  //   }
+  // }
+
   async function onSubmit(formData: z.infer<typeof loginSchema>) {
     try {
       const response = await loginHandler(formData).unwrap();
-      router.push("/");
+
+      // Set token cookie so middleware can read it
+      document.cookie = `token=${response?.data?.token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
+
       dispatch(setUser(response?.data));
-      const successMessage = response?.message || "Login successful.";
-      toast.success(successMessage);
+      router.push("/");
+      toast.success(response?.message || "Login successful.");
       form.reset();
     } catch (err: unknown) {
       const error = err as IApiError;
-      const errorMessage =
-        error?.data?.error?.message || "Something went wrong.";
-      toast.error(errorMessage);
+      toast.error(error?.data?.error?.message || "Something went wrong.");
     }
   }
 
