@@ -98,7 +98,7 @@ const AddProductForm = () => {
         value.forEach(
           (item: z.infer<typeof createProductSchema>["images"][0]) => {
             if (item instanceof File) formData.append(key, item, item.name);
-          }
+          },
         );
       } else if (value instanceof Date) {
         formData.append(key, value.toISOString());
@@ -170,8 +170,8 @@ const AddProductForm = () => {
               placeholder="Select a unit"
               inputClassName="w-full h-11"
               isDataLoading={false}
-              info={`The measurement for this product (kg, gm, pcs, etc.).
-               Example: kg → all other values are based on kilograms.`}
+              info={`এই পণ্যটি কোন এককে মাপা হবে (যেমন: কেজি, গ্রাম, পিস, লিটার)।
+ উদাহরণ: যদি আপনি কেজি নির্বাচন করেন, তাহলে সব হিসাব কেজি অনুযায়ী হবে।`}
               options={productUnitTypeOptions}
             />
             <InputField
@@ -180,8 +180,8 @@ const AddProductForm = () => {
               type="number"
               label="Unit Price"
               placeholder="50৳"
-              info={`Price of 1 unit of the product.
-              Example: 10 means 10৳ per kg`}
+              info={`এক ইউনিট পণ্যের দাম কত।
+ উদাহরণ: যদি দাম ১০৳ দেওয়া থাকে, তাহলে তা প্রতি কেজি ১০৳ বোঝায়।`}
               inputClassName="w-full flex-1"
             />
           </div>
