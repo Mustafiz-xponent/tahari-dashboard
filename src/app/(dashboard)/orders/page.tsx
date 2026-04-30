@@ -1,7 +1,5 @@
 import React from "react";
 import { DataTable } from "@/app/(dashboard)/orders/_components/DataTable";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 
 const Orders = () => {
   return (
